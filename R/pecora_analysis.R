@@ -20,7 +20,6 @@
 #' @importFrom tidyr pivot_longer
 #' @importFrom PeCorA PeCorA
 #' @importFrom grid grobTree textGrob gpar
-#' @importFrom PeCorA PeCorA
 #'
 #' @export pecora_analysis
 #'
@@ -123,6 +122,22 @@ pecora_analysis <- function(m, treatment_string, control_group = NULL, proteins,
   return(list("Result" = PeCorA_result, "Input" = PeCorA_input))
 }
 
+
+#' Plots a particular peptide using the PeCorA input and output tables.
+#'
+#' @param PeCorA_result PeCorA results table from pecora_analysis.
+#' @param PeCorA_input PeCorA input table from pecora_analysis
+#' @param chosen_protein The protein of interest.
+#' @param chosen_peptide The peptide of interest. Must map to the supplied protein.
+#' @param plot_path String indicating the path of the plot when saved. Include extension, eg "plot.png". If NULL the plot isn't saved
+#' @param label String to include as a custom label in the plots. Should be the treatment variable supplied to pecora_analysis.
+#'
+#' @return Plot of the specified peptide + protein.
+#'
+#' @importFrom grid grobTree textGrob gpar
+#'
+#' @export pecora_analysis
+#'
 
 pecora_plot <- function(PeCorA_result, PeCorA_input, chosen_protein, chosen_peptide,
                         plot_path = NULL, label = NULL) {
