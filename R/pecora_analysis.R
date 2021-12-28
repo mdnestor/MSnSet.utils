@@ -134,6 +134,7 @@ pecora_analysis <- function(m, treatment_string, control_group = NULL, proteins,
 #'
 #' @return Plot of the specified peptide + protein.
 #'
+#' @import ggplot2
 #' @importFrom grid grobTree textGrob gpar
 #'
 #' @export pecora_analysis
