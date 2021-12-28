@@ -19,7 +19,7 @@
 #'
 #' @importFrom tidyr pivot_longer
 #' @importFrom PeCorA PeCorA
-#' @importFrom grid grobTree textGrob
+#' @importFrom grid grobTree textGrob gpar
 #' @importFrom PeCorA PeCorA
 #'
 #' @export pecora_analysis
