@@ -137,7 +137,7 @@ pecora_analysis <- function(m, treatment_string, control_group = NULL, proteins,
 #' @import ggplot2
 #' @importFrom grid grobTree textGrob gpar
 #'
-#' @export pecora_analysis
+#' @export pecora_plot
 #'
 
 pecora_plot <- function(PeCorA_result, PeCorA_input, chosen_protein, chosen_peptide,
