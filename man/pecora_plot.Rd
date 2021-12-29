@@ -4,27 +4,16 @@
 \alias{pecora_plot}
 \title{Plots a particular peptide using the PeCorA input and output tables.}
 \usage{
-pecora_plot(
-  PeCorA_result,
-  PeCorA_input,
-  chosen_protein,
-  chosen_peptide,
-  plot_path = NULL,
-  label = NULL
-)
+pecora_plot(m, pecora_results, chosen_protein, chosen_peptide)
 }
 \arguments{
-\item{PeCorA_result}{PeCorA results table from pecora_analysis.}
+\item{m}{msnset object containing a pData AND fData table. fData must have a Protein and Peptide column.}
 
-\item{PeCorA_input}{PeCorA input table from pecora_analysis}
+\item{pecora_results}{PeCorA results table from pecora_analysis.}
 
 \item{chosen_protein}{The protein of interest.}
 
-\item{chosen_peptide}{The peptide of interest. Must map to the supplied protein.}
-
-\item{plot_path}{String indicating the path of the plot when saved. Include extension, eg "plot.png". If NULL the plot isn't saved}
-
-\item{label}{String to include as a custom label in the plots. Should be the treatment variable supplied to pecora_analysis.}
+\item{chosen_peptide}{The peptide of interest. Should map to the supplied protein.}
 }
 \value{
 Plot of the specified peptide + protein.

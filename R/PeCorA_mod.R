@@ -25,12 +25,21 @@ PeCorA_mod <- function (t, median_mod = FALSE) {
   print("checking which proteins still have at least 2 peptides")
   pgs <- levels(as.factor(t$Protein))
   pgs_morethan2 <- c()
-  for (x in pgs) {
-    if (length(unique(t[t$Protein %in% x, "modpep_z"])) >
-        1) {
-      pgs_morethan2 <- c(pgs_morethan2, x)
-    }
-  }
+  # Extremely slow
+  # for (x in pgs) {
+  #   if (length(unique(t[t$Protein %in% x, "modpep_z"])) >
+  #       1) {
+  #     pgs_morethan2 <- c(pgs_morethan2, x)
+  #   }
+  # }
+  pgs_morethan2 <- t %>%
+    select(Protein, modpep_z) %>%
+    unique() %>%
+    group_by(Protein) %>%
+    summarize(n_peptides = n()) %>%
+    filter(n_peptides > 1) %>%
+    pull(Protein)
+
   allp <- list()
   j = 1
   t0 <- Sys.time()
@@ -38,7 +47,7 @@ PeCorA_mod <- function (t, median_mod = FALSE) {
   pb <- txtProgressBar(min = 0, max = length(pgs_morethan2),
                        style = 3)
   for (x in pgs_morethan2) {
-    tmpdf <- t[t$Protein == x, ]
+    tmpdf <- t[which(t$Protein == x), ]
     tmpdf["allothers"] <- rep("allothers", times = nrow(tmpdf))
     pvalues <- c(rep(0, length(unique(tmpdf$modpep_z))))
     i = 1
@@ -49,6 +58,7 @@ PeCorA_mod <- function (t, median_mod = FALSE) {
         subtmpdf <- subtmpdf %>%
           group_by(Sample, allothers) %>%
           mutate(ms1adj = median(ms1adj, na.rm = T)) %>%
+          ungroup() %>%
           select(Sample, ms1adj, Condition, allothers) %>%
           unique()
       }
@@ -73,7 +83,7 @@ PeCorA_mod <- function (t, median_mod = FALSE) {
   alldf = data.frame()
   x <- names(allp)[1]
   for (x in names(allp)) {
-    tmpdf <- t[t$Protein == x, ]
+    tmpdf <- t[which(t$Protein == x), ]
     tmp_peps <- unique(tmpdf$modpep_z)
     if (length(tmp_peps) > 0) {
       tmp_pval <- allp[[x]]

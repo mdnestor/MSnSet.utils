@@ -5,17 +5,7 @@
 \title{Performs the PeCorA analysis described in https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8592057/.
 Take a look at the linked paper to get an idea of the procedure.}
 \usage{
-pecora_analysis(
-  m,
-  treatment_string,
-  control_group = NULL,
-  proteins,
-  sample_standardize = TRUE,
-  peptide_standardize = TRUE,
-  folder = "",
-  save_plots = TRUE,
-  median_mod = FALSE
-)
+pecora_analysis(m, treatment_string, proteins, median_mod = FALSE)
 }
 \arguments{
 \item{m}{msnset object containing a pData AND fData table. fData must have a Protein and Peptide column.}
@@ -24,21 +14,13 @@ pecora_analysis(
 
 \item{proteins}{character vector indicating which proteins to analyze.}
 
-\item{sample_standardize}{logical for whether exprs data should be standardized so that sample wise we have mean zero and variance one.}
-
-\item{peptide_standardize}{logical for whether exprs data should be normalized so that logratio data is relative to the control group.}
-
-\item{folder}{folder in which to save the plots. For example folder = "directory/".}
-
-\item{save_plots}{logical for whether to save boxplots/scatterplots of the significant peptides.}
+\item{median_mod}{logical for whether to use the original PeCorA (median_mod = FALSE), or the median version (median_mod = TRUE). See the help of PeCorA_mod for more details.}
 }
 \value{
 PeCorA results table for the supplied proteins. Saves plots of the significant peptides to the given folder.
 }
 \description{
-Takes an msnset, a list of proteins, and a treatment variable. The data is standardized depending on the
-chosen parameters of 'sample_standardize' and 'peptide_standardize'. Then the PeCorA function from the
-PeCorA package is used to find discordant peptides. Plots of the significant peptides are made and
-saved to the given folder. Finally, the output contains a table with the phosphosites mapping to the given
-proteins, along with their PeCorA analysis p-values.
+Takes an msnset, a list of proteins, and a treatment variable. msnset is assumed to be normalized, for instance it can be the output of
+pecora_preprocessing, which normalizes as in the original PeCorA paper.
+The PeCorA function is then used for the analysis. Returns a table containing Peptide, Protein, and significance.
 }
