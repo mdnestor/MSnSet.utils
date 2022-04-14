@@ -204,7 +204,7 @@ utils::globalVariables(c(".", "AA_STANDARD", "TrimmedPeptide", "x",
 #'
 #' # Adding gene annotation. Note: this is rat data searched against UniProt.
 #' # 10116 is rat taxonomy ID
-#' URL <- "http://www.uniprot.org/uniprot/?query=organism:10116&columns=id,genes(PREFERRED)&format=tab"
+#' URL <- url("http://www.uniprot.org/uniprot/?query=organism:10116&columns=id,genes(PREFERRED)&format=tab")
 #'
 #' library(dplyr)
 #'
