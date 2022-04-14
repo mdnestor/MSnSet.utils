@@ -4,11 +4,10 @@ on:
   push:
     branches:
       - master
-      - improve/update_existing
+      - bugfix/fix_con_error
   pull_request:
     branches:
       - master
-      - improve/update_existing
 
 name: R-CMD-check
 
