@@ -80,7 +80,7 @@ Suggests:
     UniProt.ws
 Remotes: 
     github::cran/heatmap.plus, 
-    github::cran/FField
+    github::cran/FField,
     github::PNNL-Comp-Mass-Spec/MSnID
 VignetteBuilder: knitr
 RoxygenNote: 7.2.3
