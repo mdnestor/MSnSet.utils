@@ -186,12 +186,18 @@ rf_modeling <- function( msnset, features, response, pred.cls, K=NULL, sel.feat=
     if(is.null(cores)){
         cores <- max(1, detectCores() - 1)
     }
-    stopifnot(1 <= cores && cores <= detectCores())
+    stopifnot(1 <= cores)
+    if(cores > detectCores()){
+        msg <- sub("\n", "", "The number of specified processes is greater than
+                the number of cores available on this computer. 
+                This may lead to high computational overhead.")
+        warning(msg)
+    }
     multiproc_cl <- makeCluster(cores)
     clusterEvalQ(multiproc_cl, library("MSnID"))
     clusterEvalQ(multiproc_cl, library("Biobase"))
-    set.seed(42) # Set outer seed
-    clusterSetRNGStream(multiproc_cl, 21) # Set process seeds
+    set.seed(0) # Set outer seed
+    clusterSetRNGStream(multiproc_cl, 0) # Set process seeds
     silence <- clusterExport(multiproc_cl,
                              c("dSet","cv_idx","features",
                                "response"),
