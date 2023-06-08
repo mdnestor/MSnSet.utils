@@ -124,7 +124,7 @@ train_model_rf <- function(x, y, ...){
 #'
 #' @importFrom randomForest randomForest
 #' @importFrom ROCR prediction performance
-#' @importFrom parallel mclapply detectCores parLapply clusterEvalQ
+#' @importFrom parallel mclapply detectCores parLapply clusterEvalQ clusterSetRNGStream
 #' @importFrom stats predict
 #' @importFrom Biobase featureNames
 #'
@@ -190,6 +190,8 @@ rf_modeling <- function( msnset, features, response, pred.cls, K=NULL, sel.feat=
     multiproc_cl <- makeCluster(cores)
     clusterEvalQ(multiproc_cl, library("MSnID"))
     clusterEvalQ(multiproc_cl, library("Biobase"))
+    set.seed(42) # Set outer seed
+    clusterSetRNGStream(multiproc_cl, 21) # Set process seeds
     silence <- clusterExport(multiproc_cl,
                              c("dSet","cv_idx","features",
                                "response"),
