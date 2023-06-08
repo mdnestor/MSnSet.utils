@@ -187,10 +187,10 @@ rf_modeling <- function( msnset, features, response, pred.cls, K=NULL, sel.feat=
         cores <- max(1, detectCores() - 1)
     }
     stopifnot(1 <= cores && cores <= detectCores())
-    multiproc_cl <- makeCluster()
+    multiproc_cl <- makeCluster(cores)
     clusterEvalQ(multiproc_cl, library("MSnID"))
     clusterEvalQ(multiproc_cl, library("Biobase"))
-    _ <- clusterExport(multiproc_cl,
+    silence <- clusterExport(multiproc_cl,
                              c("dSet","cv_idx","features",
                                "response"),
                              envir = environment())
