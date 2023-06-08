@@ -156,7 +156,7 @@ train_model_rf <- function(x, y, ...){
 
 
 rf_modeling <- function( msnset, features, response, pred.cls, K=NULL, sel.feat=TRUE,
-                            sel.alg=c("varSelRF","Boruta","top"), ...){
+                            sel.alg=c("varSelRF","Boruta","top"), cores=NULL, ...){
 
     # to avoid running processes in case the function crashes
     on.exit(stopCluster(multiproc_cl))
@@ -183,10 +183,14 @@ rf_modeling <- function( msnset, features, response, pred.cls, K=NULL, sel.feat=
         K <- nrow(dSet)
     num_rep <- ceiling(nrow(dSet)/K)
     cv_idx <- sample(rep(seq_len(K), num_rep)[seq_len(nrow(dSet))])
-    multiproc_cl <- makeCluster(max(1, detectCores() - 1))
+    if(is.null(cores)){
+        cores <- max(1, detectCores() - 1)
+    }
+    stopifnot(1 <= cores && cores <= detectCores())
+    multiproc_cl <- makeCluster()
     clusterEvalQ(multiproc_cl, library("MSnID"))
     clusterEvalQ(multiproc_cl, library("Biobase"))
-    silence <- clusterExport(multiproc_cl,
+    _ <- clusterExport(multiproc_cl,
                              c("dSet","cv_idx","features",
                                "response"),
                              envir = environment())
