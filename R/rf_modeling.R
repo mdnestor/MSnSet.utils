@@ -124,7 +124,7 @@ train_model_rf <- function(x, y, ...){
 #'
 #' @importFrom randomForest randomForest
 #' @importFrom ROCR prediction performance
-#' @importFrom parallel mclapply detectCores parLapply clusterEvalQ clusterSetRNGStream
+#' @importFrom parallel mclapply detectCores parLapply clusterEvalQ
 #' @importFrom stats predict
 #' @importFrom Biobase featureNames
 #'
@@ -153,6 +153,8 @@ train_model_rf <- function(x, y, ...){
 #' plot(sort(out$prob))
 #' abline(h=0.5, col='red')
 #'}
+
+
 rf_modeling <- function( msnset, features, response, pred.cls, K=NULL, sel.feat=TRUE,
                             sel.alg=c("varSelRF","Boruta","top"), cores=NULL, 
                                 seed=0, ...){
