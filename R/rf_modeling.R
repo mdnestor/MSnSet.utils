@@ -153,8 +153,6 @@ train_model_rf <- function(x, y, ...){
 #' plot(sort(out$prob))
 #' abline(h=0.5, col='red')
 #'}
-
-
 rf_modeling <- function( msnset, features, response, pred.cls, K=NULL, sel.feat=TRUE,
                             sel.alg=c("varSelRF","Boruta","top"), cores=NULL, 
                                 seed=0, ...){
@@ -176,13 +174,14 @@ rf_modeling <- function( msnset, features, response, pred.cls, K=NULL, sel.feat=
     sel.alg <- match.arg(sel.alg)
     FUN <- switch(sel.alg,
                   varSelRF = select_features_varSelRF,
-                  Boruta = function(x,y) select_features_Boruta(x,y,...),
+                  Boruta = function(x,y, ...) select_features_Boruta(x,y,...),
                   top = select_features_top)
 
     # do K-fold split here
     if(is.null(K))
         K <- nrow(dSet)
     num_rep <- ceiling(nrow(dSet)/K)
+    set.seed(seed)
     cv_idx <- sample(rep(seq_len(K), num_rep)[seq_len(nrow(dSet))])
     if(is.null(cores)){
         cores <- max(1, detectCores() - 1)
@@ -194,20 +193,27 @@ rf_modeling <- function( msnset, features, response, pred.cls, K=NULL, sel.feat=
                 This may lead to high computational overhead.")
         warning(msg)
     }
-    multiproc_cl <- makeCluster(cores)
-    clusterEvalQ(multiproc_cl, library("MSnID"))
-    clusterEvalQ(multiproc_cl, library("Biobase"))
-    # set.seed(seed) # Set outer seed (probably not needed)
-    clusterSetRNGStream(multiproc_cl, seed) # Set process seeds
-    silence <- clusterExport(multiproc_cl,
+    multiproc_cl <- makeCluster(cores, outfile = "")
+
+    clusterEvalQ(multiproc_cl, invisible(suppressWarnings({
+        Sys.setenv(`_R_S3_METHOD_REGISTRATION_NOTE_OVERWRITES_` = "false")
+        suppressWarnings(suppressPackageStartupMessages({
+            library("MSnID")
+            library("Biobase")
+        }))
+    })))
+    invisible(clusterExport(multiproc_cl,
                              c("dSet","cv_idx","features",
-                               "response"),
-                             envir = environment())
+                               "response", "seed"),
+                             envir = environment()))
     fn <- function(i){
+       RNGkind("L'Ecuyer-CMRG")
+       set.seed(i)
+       seed <- i
        i <- cv_idx == i
        if(sel.feat){
           features.sel <- FUN(x=dSet[!i,features],
-                              y=dSet[!i,response])
+                              y=dSet[!i,response], seed = seed)
        }else{
           features.sel <- features
        }
@@ -224,8 +230,7 @@ rf_modeling <- function( msnset, features, response, pred.cls, K=NULL, sel.feat=
        list(predProb, features.sel)
     }
     res <- parLapply(cl = multiproc_cl, X = 1:K, fun = fn)
-    # stopCluster(multiproc_cl) # replaced with on.exit()
-    #
+
     predProb <- unlist(sapply(res, '[[', 1, simplify = FALSE)) # unlist TODO
     predProb <- predProb[rownames(dSet)]
     names(predProb) <- NULL # for compatibility
