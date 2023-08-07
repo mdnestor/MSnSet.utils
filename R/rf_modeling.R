@@ -204,7 +204,7 @@ rf_modeling <- function( msnset, features, response, pred.cls, K=NULL, sel.feat=
     })))
     invisible(clusterExport(multiproc_cl,
                              c("dSet","cv_idx","features",
-                               "response", "seed"),
+                               "response"),
                              envir = environment()))
     fn <- function(i){
        RNGkind("L'Ecuyer-CMRG")
