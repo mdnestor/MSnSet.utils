@@ -30,7 +30,8 @@ image_msnset <- function(m, valueName="value",
                          sOrderBy=NULL,
                          fOrderBy=NULL,
                          valRange=NULL,
-                         maxNRows=50){
+                         maxNRows=50,
+                         tile_instead_of_raster=FALSE){
 
     # convertion to long format
     mlong <- melt(exprs(m),
@@ -62,8 +63,10 @@ image_msnset <- function(m, valueName="value",
 
     if(!is.null(facetBy)) x$facetBy <- x[[facetBy]]
 
+    geom_func <- ifelse(tile_instead_of_raster, geom_tile, geom_raster)
+
     p <- ggplot(x, aes(x=`sample name`, y=`feature id`, fill=value)) +
-        geom_raster() +
+        geom_func() +
         scale_fill_gradientn(
             colours=bluered(100),
             values = c(0, seq(qn01[1], qn01[2], length.out = 98), 1),

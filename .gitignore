@@ -10,3 +10,8 @@ MSnSet.utils.Rproj
 Misc/
 /doc/
 /Meta/
+*.RData
+*.log
+
+# editors
+.vscode
