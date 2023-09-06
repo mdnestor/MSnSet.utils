@@ -15,3 +15,4 @@ Misc/
 
 # editors
 .vscode
+.Rcache/
