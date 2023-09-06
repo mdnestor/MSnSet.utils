@@ -204,14 +204,16 @@ rf_modeling <- function( msnset, features, response, pred.cls, K=NULL, sel.feat=
             library("Biobase")
         }))
     })))
+    set.seed(seed)
+    seed_seq <- sample(-1e15:1e15, size = K)
     invisible(clusterExport(multiproc_cl,
                              c("dSet","cv_idx","features",
-                               "response"),
+                               "response", "seed_seq"),
                              envir = environment()))
     fn <- function(i){
        RNGkind("L'Ecuyer-CMRG")
-       set.seed(i)
-       seed <- i
+       seed <- seed_seq[i]
+       set.seed(seed)
        i <- cv_idx == i
        if(sel.feat){
           features.sel <- FUN(x=dSet[!i,features],
@@ -231,6 +233,8 @@ rf_modeling <- function( msnset, features, response, pred.cls, K=NULL, sel.feat=
        # print(i)
        list(predProb, features.sel)
     }
+    X <- mapply(function(i, seed) list(i, seed), 1:K, seed_seq)
+
     res <- parLapply(cl = multiproc_cl, X = 1:K, fun = fn)
 
     predProb <- unlist(sapply(res, '[[', 1, simplify = FALSE)) # unlist TODO
