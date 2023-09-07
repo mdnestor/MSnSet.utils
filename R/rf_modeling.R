@@ -205,7 +205,7 @@ rf_modeling <- function( msnset, features, response, pred.cls, K=NULL, sel.feat=
         }))
     })))
     set.seed(seed)
-    seed_seq <- sample(-1e15:1e15, size = K)
+    seed_seq <- sample(-.Machine$integer.max:.Machine$integer.max, size = K)
     invisible(clusterExport(multiproc_cl,
                              c("dSet","cv_idx","features",
                                "response", "seed_seq"),
