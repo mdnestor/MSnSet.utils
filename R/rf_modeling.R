@@ -42,7 +42,6 @@ select_features_Boruta <- function(x, y, ...){
 #     f2 <- names(head(importance(rf)[order(importance(rf)[,1],decreasing=TRUE),],20))
 #     x <- x[,f2]
 #     #
-    stop("45")
     rfbo <- Boruta(x, y,
                    #maxRuns = 100, # 1000
                    doTrace=0,
@@ -211,6 +210,7 @@ rf_modeling <- function( msnset, features, response, pred.cls, K=NULL, sel.feat=
                                "response", "seed_seq"),
                              envir = environment()))
     fn <- function(i){
+        stop("213")
        RNGkind("L'Ecuyer-CMRG")
        seed <- seed_seq[i]
        set.seed(seed)
