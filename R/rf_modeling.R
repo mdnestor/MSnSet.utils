@@ -42,7 +42,7 @@ select_features_Boruta <- function(x, y, ...){
 #     f2 <- names(head(importance(rf)[order(importance(rf)[,1],decreasing=TRUE),],20))
 #     x <- x[,f2]
 #     #
-
+    stop("45")
     rfbo <- Boruta(x, y,
                    #maxRuns = 100, # 1000
                    doTrace=0,
@@ -226,7 +226,6 @@ rf_modeling <- function( msnset, features, response, pred.cls, K=NULL, sel.feat=
        # train model
        x=dSet[!i,features.sel,drop=FALSE]
        colnames(x) <- make.names(colnames(x))
-        stop("Before train_model_rf")
        mdl <- train_model_rf(x=x, y=dSet[!i,response])
        # predict
        newdata <- dSet[i,features.sel,drop=FALSE]
