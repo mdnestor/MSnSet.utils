@@ -226,7 +226,7 @@ rf_modeling <- function( msnset, features, response, pred.cls, K=NULL, sel.feat=
        # train model
        x=dSet[!i,features.sel,drop=FALSE]
        colnames(x) <- make.names(colnames(x))
-
+        stop("Before train_model_rf")
        mdl <- train_model_rf(x=x, y=dSet[!i,response])
        # predict
        newdata <- dSet[i,features.sel,drop=FALSE]
@@ -238,7 +238,6 @@ rf_modeling <- function( msnset, features, response, pred.cls, K=NULL, sel.feat=
        list(predProb, features.sel)
     }
     X <- mapply(function(i, seed) list(i, seed), 1:K, seed_seq)
-    stop("Before pLa")
     res <- parLapply(cl = multiproc_cl, X = 1:K, fun = fn)
 
     predProb <- unlist(sapply(res, '[[', 1, simplify = FALSE)) # unlist TODO
