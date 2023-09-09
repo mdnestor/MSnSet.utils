@@ -211,36 +211,34 @@ rf_modeling <- function( msnset, features, response, pred.cls, K=NULL, sel.feat=
                                "response", "seed_seq"),
                              envir = environment()))
     fn <- function(i){
-        print("214")
        RNGkind("L'Ecuyer-CMRG")
        seed <- seed_seq[i]
        set.seed(seed)
        i <- cv_idx == i
-       print("219")
+
        if(sel.feat){
           features.sel <- FUN(x=dSet[!i,features],
                               y=dSet[!i,response], seed = seed)
        }else{
           features.sel <- features
        }
-       print("225")
+
        # train model
        x=dSet[!i,features.sel,drop=FALSE]
        colnames(x) <- make.names(colnames(x))
-       print("230")
+
        mdl <- train_model_rf(x=x, y=dSet[!i,response])
        # predict
        newdata <- dSet[i,features.sel,drop=FALSE]
        colnames(newdata) <- make.names(colnames(newdata))
-       print("235")
+
        predProb <- predict(mdl, newdata=newdata, type='prob')[,pred.cls]
        names(predProb) <- rownames(newdata)
        # print(i)
        list(predProb, features.sel)
-       print("240")
     }
     X <- mapply(function(i, seed) list(i, seed), 1:K, seed_seq)
-
+    stop("Before pLa")
     res <- parLapply(cl = multiproc_cl, X = 1:K, fun = fn)
 
     predProb <- unlist(sapply(res, '[[', 1, simplify = FALSE)) # unlist TODO
