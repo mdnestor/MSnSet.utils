@@ -194,7 +194,7 @@ rf_modeling <- function( msnset, features, response, pred.cls, K=NULL, sel.feat=
                 This may lead to high computational overhead.")
         warning(msg)
     }
-    multiproc_cl <- makeCluster(cores, outfile = "")
+    multiproc_cl <- makeCluster(cores)
 
     clusterEvalQ(multiproc_cl, invisible(suppressWarnings({
         Sys.setenv(`_R_S3_METHOD_REGISTRATION_NOTE_OVERWRITES_` = "false")
@@ -210,7 +210,6 @@ rf_modeling <- function( msnset, features, response, pred.cls, K=NULL, sel.feat=
                                "response", "seed_seq"),
                              envir = environment()))
     fn <- function(i){
-        stop("213")
        RNGkind("L'Ecuyer-CMRG")
        seed <- seed_seq[i]
        set.seed(seed)
