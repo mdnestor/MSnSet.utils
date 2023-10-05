@@ -20,22 +20,22 @@
 
 readSkyLinePRR <- function(file) {
     x <- read.csv(file, na.strings = '#N/A', stringsAsFactors = FALSE)
-    # xf <- plyr::ddply(x, .variables=c("Peptide.Sequence", "Protein.Name"),
+    # xf <- plyr::ddply(x, .variables=c("Peptide", "Protein"),
     #             plyr::summarise, mean.rt = mean(Peptide.Retention.Time, na.rm=T))
     xf <- x %>%
-        group_by(Peptide.Sequence, Protein.Name) %>%
+        group_by(Peptide, Protein) %>%
         summarise(mean.rt = mean(Peptide.Retention.Time, na.rm = TRUE)) %>%
         as.data.frame()
 
-    rownames(xf) <- xf$Peptide.Sequence
+    rownames(xf) <- xf$Peptide
     # This is one of two times the reshape2 package is used.
     # Instead, dplyr version below should work.
-    xe <- acast(x, Peptide.Sequence ~ Replicate.Name, value.var = "Ratio.To.Standard")
+    xe <- acast(x, Peptide ~ Replicate, value.var = "Ratio.To.Standard")
     # xe <- x %>%
-    #     pivot_wider(id_cols = c("Peptide.Sequence", "Replicate.Name"),
+    #     pivot_wider(id_cols = c("Peptide", "Replicate"),
     #                 values_from = "Ratio.To.Standard")
 
-    xp <- data.frame(Replicate.Name=colnames(xe),
+    xp <- data.frame(Replicate=colnames(xe),
                      row.names=colnames(xe),
                      stringsAsFactors = FALSE)
     msnset <- MSnSet(exprs = xe, fData = xf, pData = xp)
@@ -45,6 +45,6 @@ readSkyLinePRR <- function(file) {
         return(NULL)
 }
 
-utils::globalVariables(c("Peptide.Sequence", "Protein.Name",
+utils::globalVariables(c("Peptide", "Protein",
                          "Peptide.Retention.Time"))
 
