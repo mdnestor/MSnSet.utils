@@ -12,6 +12,8 @@ rf_modeling(
   K = NULL,
   sel.feat = TRUE,
   sel.alg = c("varSelRF", "Boruta", "top"),
+  cores = NULL,
+  seed = 0,
   ...
 )
 }

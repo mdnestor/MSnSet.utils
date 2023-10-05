@@ -11,7 +11,8 @@ image_msnset(
   sOrderBy = NULL,
   fOrderBy = NULL,
   valRange = NULL,
-  maxNRows = 50
+  maxNRows = 50,
+  tile_instead_of_raster = FALSE
 )
 }
 \arguments{
