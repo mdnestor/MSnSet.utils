@@ -6,7 +6,7 @@
 \usage{
 plotAUC_gg(
   modelingResult,
-  CI = TRUE,
+  CI = FALSE,
   rectilinear = FALSE,
   no_numeric_policy = c("warning", "plot_blank", "error"),
   seed = 0
@@ -16,7 +16,7 @@ plotAUC_gg(
 \item{modelingResult}{output from either
 \code{lr_modeling} or \code{rf_modeling}}
 
-\item{CI}{(logical) Plot confidence interval or not. Default is False.}
+\item{CI}{(logical) Plot confidence interval or not. Default is FALSE.}
 
 \item{rectilinear}{(logical) Prevents diagonal lines being formed from jumps in TPR from CI boundaries. (Technical -- transforms segment y = mx + b between fpr1 and fpr2 to the line x = avg(fpr1, fpr2) between y = m*fpr1 + b and y = m*fpr2 + b. Surrounding horizontal segments are extended to this new vertical segment.)}
 
