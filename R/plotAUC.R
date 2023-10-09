@@ -95,9 +95,9 @@ plotAUC_gg <- function(
       p <- ggplot2::ggplot() +
          ggplot2::geom_abline(
             mapping = aes(color = "", slope = 1, intercept = 0),
-            linetype = "dashed"
+            linetype = "dashed", show.legend = FALSE
          ) +
-         ggplot2::scale_color_manual(values = c(random_line_col), name = "Random Model") +
+         ggplot2::scale_color_manual(values = c(random_line_col)) +
          ggplot2::xlab("False Positive Rate") +
          ggplot2::ylab("True Positive Rate") +
          ggplot2::labs(
@@ -219,9 +219,9 @@ plotAUC_gg <- function(
          ggplot2::geom_line(mapping = aes(x = x, y = y), lwd = 1) +
          ggplot2::geom_abline(
             mapping = aes(color = "", slope = 1, intercept = 0),
-            linetype = "dashed"
+            linetype = "dashed", show.legend = FALSE
          ) +
-         ggplot2::scale_color_manual(values = c(random_line_col), name = "Random Model") +
+         ggplot2::scale_color_manual(values = c(random_line_col)) +
          ggplot2::xlab("False Positive Rate") +
          ggplot2::ylab("True Positive Rate") +
          ggplot2::labs(
@@ -246,9 +246,9 @@ plotAUC_gg <- function(
           ggplot2::geom_line(mapping = aes(x = x, y = y), lwd = 1) +
           ggplot2::geom_abline(
             mapping = aes(color = "", slope = 1, intercept = 0),
-            linetype = "dashed"
+            linetype = "dashed", show.legend = FALSE
           ) +
-          ggplot2::scale_color_manual(values = c(random_line_col), name = "Random Model") +
+          ggplot2::scale_color_manual(values = c(random_line_col)) +
           ggplot2::xlab("False Positive Rate") +
           ggplot2::ylab("True Positive Rate") +
           ggplot2::labs(
