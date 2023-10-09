@@ -58,7 +58,7 @@ plotAUC <- function(modelingResult, CI = FALSE, ...) {
 #'
 #' @param modelingResult output from either
 #'          \code{lr_modeling} or \code{rf_modeling}
-#' @param CI (logical) Plot confidence interval or not. Default is False.
+#' @param CI (logical) Plot confidence interval or not. Default is FALSE.
 #' @param rectilinear (logical) Prevents diagonal lines being formed from jumps in TPR from CI boundaries. (Technical -- transforms segment y = mx + b between fpr1 and fpr2 to the line x = avg(fpr1, fpr2) between y = m*fpr1 + b and y = m*fpr2 + b. Surrounding horizontal segments are extended to this new vertical segment.)
 #' @param ... further arguments passes to the \code{plot} method of the
 #'             \code{\link[pROC]{ci.se}} object of the \code{pROC} package.
@@ -73,7 +73,7 @@ plotAUC <- function(modelingResult, CI = FALSE, ...) {
 #'
 plotAUC_gg <- function(
     modelingResult,
-    CI = TRUE,
+    CI = FALSE,
     rectilinear = FALSE,
     no_numeric_policy = c("warning", "plot_blank", "error"),
     seed = 0) {
@@ -166,15 +166,15 @@ plotAUC_gg <- function(
       return(ci_df)
    }
 
-   plot_main <- function(seed = seed) {
+   plot_main <- function(.seed = seed, conf_int = ci) {
       perf <- performance(modelingResult$pred, "tpr", "fpr")
-      set.seed(seed)
+      set.seed(.seed)
       pROC_obj <- suppressMessages(pROC::roc(modelingResult$pred@labels[[1]],
          modelingResult$pred@predictions[[1]],
          direction = "<",
          smoothed = TRUE,
          # arguments for ci
-         ci = TRUE,
+         ci = conf_int,
          ci.alpha = 0.95,
          stratified = FALSE,
          # arguments for plot
@@ -184,26 +184,31 @@ plotAUC_gg <- function(
          grid = FALSE
       ))
       df <- data.frame(x = perf@x.values[[1]], y = perf@y.values[[1]])
-      the_ci <- pROC::ci.se(
-         pROC_obj,
-         specificities = seq(0, 1, 0.025),
-         progress = "none"
-      )
-      the_ci <- as.data.frame(the_ci) %>%
-         `colnames<-`(c("lo", "mid", "hi")) %>%
-         tibble::rownames_to_column("fpr") %>%
-         mutate(fpr = as.double(sub("X", "", fpr))) %>%
-         select(-c("mid"))
-      the_ci$fpr <- 1 - the_ci$fpr
-      the_ci <- the_ci %>% arrange(fpr)
+      if (conf_int) {
+        the_ci <- pROC::ci.se(
+           pROC_obj,
+           specificities = seq(0, 1, 0.025),
+           progress = "none"
+        )
+        the_ci <- as.data.frame(the_ci) %>%
+           `colnames<-`(c("lo", "mid", "hi")) %>%
+           tibble::rownames_to_column("fpr") %>%
+           mutate(fpr = as.double(sub("X", "", fpr))) %>%
+           select(-c("mid"))
+        the_ci$fpr <- 1 - the_ci$fpr
+        the_ci <- the_ci %>% arrange(fpr)
+      }
       if (rectilinear) {
          the_ci <- make_rectilinear_roc_ci(the_ci)
       }
 
       auc.ci.lo <- pROC_obj$ci[1]
       auc.ci.hi <- pROC_obj$ci[3]
+
       ribbon_col <- "#c96f6f"
       ci_col <- "red"
+
+      if (conf_int) {
       p <- ggplot2::ggplot(data = df) +
          ggplot2::geom_ribbon(
             data = the_ci,
@@ -236,6 +241,33 @@ plotAUC_gg <- function(
          ggplot2::scale_x_continuous(limits = c(0, 1), breaks = seq(0, 1, 0.2)) +
          ggplot2::scale_y_continuous(limits = c(0, 1), breaks = seq(0, 1, 0.2))
       return(p)
+      } else {
+        p <- ggplot2::ggplot(data = df) +
+          ggplot2::geom_line(mapping = aes(x = x, y = y), lwd = 1) +
+          ggplot2::geom_abline(
+            mapping = aes(color = "", slope = 1, intercept = 0),
+            linetype = "dashed"
+          ) +
+          ggplot2::scale_color_manual(values = c(random_line_col), name = "Random Model") +
+          ggplot2::xlab("False Positive Rate") +
+          ggplot2::ylab("True Positive Rate") +
+          ggplot2::labs(
+            title = "ROC Curve",
+            subtitle = sprintf(
+              "AUC: %.3f",
+              modelingResult$auc
+            )
+          ) +
+          ggplot2::theme(
+            aspect.ratio = 1,
+            plot.title = element_text(hjust = 0.5, face = "bold", size = 16),
+            plot.subtitle = element_text(hjust = 0.5, family = "mono")
+          ) +
+          ggplot2::scale_x_continuous(limits = c(0, 1), breaks = seq(0, 1, 0.2)) +
+          ggplot2::scale_y_continuous(limits = c(0, 1), breaks = seq(0, 1, 0.2))
+        return(p)
+
+      }
    }
 
 
