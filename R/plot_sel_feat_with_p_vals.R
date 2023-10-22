@@ -38,7 +38,7 @@ plot_sel_feat_with_p_vals <- function(
         display_lab <- unlist(unname(
             lapply(
                 display_lab,
-                function(dl) ifelse(dl %in% highlight_feats, paste("❉ ", dl, sep = ""), dl)
+                function(dl) ifelse(dl %in% highlight_feats, paste("** ", dl, sep = ""), dl)
             )
         ))
     }
@@ -81,7 +81,7 @@ plot_sel_feat_with_p_vals <- function(
         title_if_else +
         ggplot2::theme(
             axis.text.x = element_text(angle = 50, hjust = 1, vjust = 1),
-            aspect.ratio = 1 / 2,
+            # aspect.ratio = 1 / 2,
             plot.background = NULL,
             plot.title = element_text(hjust = 0.5, face = "bold"),
             plot.subtitle = element_text(hjust = 0.5),
