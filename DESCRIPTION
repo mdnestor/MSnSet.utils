@@ -26,6 +26,7 @@ Imports:
     circlize,
     data.table, 
     doParallel,
+    DOSE,
     dplyr,
     foreach,
     ggplot2,
@@ -62,6 +63,7 @@ Imports:
     varSelRF,
     WGCNA,
     xtable,
+    FField,
     MSnID
 Suggests:
     BiocStyle,
