@@ -1,6 +1,8 @@
 adj.P.Val <- NULL # (For lintr)
 
 
+#' @title MSnSet Feature Bar Chart with (Adjusted) P-Value Coloring
+#'
 #' @export plot_sel_feat_with_p_vals
 #'
 #' @param top_selected A named vector with names as top Boruta-selected features and \
@@ -26,7 +28,8 @@ plot_sel_feat_with_p_vals <- function(
     feat_name_colname = NULL,
     highlight_feats = NULL,
     highlight_reason = NULL,
-    alpha = 0.05) {
+    alpha = 0.05,
+    title = "Frequency of\nBoruta-Selected Features") {
     lab <- as.vector(names(top_selected))
     cnt <- as.vector(unlist(unname(top_selected)))
     if (!is.null(feat_name_colname)) {
@@ -38,7 +41,7 @@ plot_sel_feat_with_p_vals <- function(
         display_lab <- unlist(unname(
             lapply(
                 display_lab,
-                function(dl) ifelse(dl %in% highlight_feats, paste("** ", dl, sep = ""), dl)
+                function(dl) ifelse(dl %in% highlight_feats, paste("❉ ", dl, sep = ""), dl)
             )
         ))
     }
@@ -51,46 +54,53 @@ plot_sel_feat_with_p_vals <- function(
 
     limma <- MSnSet.utils:::.get_limma(top_selected, msnset, alpha, response_colname)
     df <- merge(df_from_counts, limma, by.x = "lab", by.y = 0)
-    labels_breaks <- append(
+    labels_breaks <- sort(append(
         c(1, alpha),
         unlist(lapply(seq(-2, -10, -2), function(x) 10^x))
-    )
+    ), decreasing = TRUE)
+
+    labels_breaks <- labels_breaks[labels_breaks <= alpha | labels_breaks == 1]
     hard_cut <- scales::rescale(x = log10(labels_breaks), to = c(0, 1))[2]
     if (!is.null(highlight_reason) && !is.null(highlight_feats)) {
         title_if_else <- labs(
-            title = "Frequency of\nBoruta-Selected Features",
+            title = title,
             subtitle = glue::glue("❉ = {highlight_reason}")
         )
     } else {
         title_if_else <- labs(
-            title = "Frequency of\nBoruta-Selected Features"
+            title = title
         )
     }
 
+    colors <- viridis::viridis(10)
     p <- ggplot(data = df) +
-        geom_col(
-            mapping = aes(
+        ggplot2::geom_col(
+            mapping = ggplot2::aes(
                 x = forcats::fct_reorder(display_lab, cnt, .desc = TRUE),
                 y = cnt,
                 fill = adj.P.Val
             ),
-            width = 0.66
+            width = 2 / 3
         ) +
-        xlab("Feature Name") +
-        ylab("Counts") +
+        ggplot2::xlab("Feature Name") +
+        ggplot2::ylab("Counts") +
+        ggplot2::geom_hline(mapping = ggplot2::aes(
+            yintercept = ncol(msnset),
+            linetype = "Total Number of\nSubjects"
+        )) +
+        ggplot2::scale_linetype_manual(values = c("dashed"), name = "Legend") +
         title_if_else +
         ggplot2::theme(
-            axis.text.x = element_text(angle = 50, hjust = 1, vjust = 1),
-            # aspect.ratio = 1 / 2,
+            axis.text.x = ggplot2::element_text(angle = 50, hjust = 1, vjust = 1),
             plot.background = NULL,
-            plot.title = element_text(hjust = 0.5, face = "bold"),
-            plot.subtitle = element_text(hjust = 0.5),
-            legend.key.height = unit(2.5, "char"),
-            legend.key.width = unit(1, "char")
+            plot.title = ggplot2::element_text(hjust = 0.5, face = "bold"),
+            plot.subtitle = ggplot2::element_text(hjust = 0.5),
+            legend.key.height = ggplot2::unit(2.5, "char"),
+            legend.key.width = ggplot2::unit(1, "char")
         ) +
         ggplot2::scale_fill_gradientn(
             name = "Adjusted\nP-value",
-            colors = append(viridis::viridis(5), c("white", "white")),
+            colors = c(colors, "white", "white"),
             trans = "log",
             limits = c(labels_breaks[length(labels_breaks)], labels_breaks[1]),
             labels = append(
@@ -99,11 +109,13 @@ plot_sel_feat_with_p_vals <- function(
             ),
             breaks = labels_breaks,
             oob = scales::squish,
-            values = append(
-                seq(0, hard_cut, hard_cut / 5),
-                c(hard_cut - 1e-10, hard_cut, 1)
-            ),
-            guide = guide_colorbar(frame.colour = "black", ticks.colour = "black")
+            values = sort(append(
+                seq(0, hard_cut, hard_cut / 10),
+                c(hard_cut - 1e-6, 1)
+            )),
+            guide = ggplot2::guide_colorbar(
+                frame.colour = "black", ticks.colour = "black"
+            )
         )
     return(p)
 }
