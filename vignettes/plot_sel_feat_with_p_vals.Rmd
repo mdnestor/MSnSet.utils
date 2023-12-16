@@ -8,7 +8,7 @@ output:
 
 <!--
 %\VignetteEngine{knitr::rmarkdown}
-%\VignetteIndexEntry{WGCNA example}
+%\VignetteIndexEntry{Bar Chart with P-Value Coloring}
 %\VignetteKeyword{MSnSet.utils}
 %\VignettePackage{MSnSet.utils}
 -->
@@ -45,6 +45,7 @@ tryCatch(
             alpha = 0.05
         )
     },
-    warning = function(...) "Data not found for plot_sel_feat_with_p_vals.msnset."
+    warning = function(...) "Data not found for plot_sel_feat_with_p_vals.msnset.",
+    error = function(...) "Data not found for plot_sel_feat_with_p_vals.msnset."
 )
 ```
