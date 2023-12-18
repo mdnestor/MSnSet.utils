@@ -108,6 +108,9 @@ train_model_rf <- function(x, y, ...){
 #'          \item top - just selecting top 3 features
 #'      }
 #' @param ... Extra arguments. Currently passed only to Boruta algorithm.
+#' @param seed The random state seed to use during various stages of \code{rf_modeling}
+#' @param cores The number of processes to use for Boruta. If NULL, the number of 
+#'              processes will be set to max(1, min(cores available in machine - 1, 125)).
 #'
 #' @return list
 #'      \describe{
@@ -185,7 +188,7 @@ rf_modeling <- function( msnset, features, response, pred.cls, K=NULL, sel.feat=
     set.seed(seed)
     cv_idx <- sample(rep(seq_len(K), num_rep)[seq_len(nrow(dSet))])
     if(is.null(cores)){
-        cores <- max(1, detectCores() - 1)
+        cores <- max(1, min(125, detectCores() - 1))
     }
     stopifnot(1 <= cores)
     if(cores > detectCores()){

@@ -16,28 +16,30 @@ plot_sel_feat_with_p_vals(
 )
 }
 \arguments{
-\item{top_selected}{A named vector with names as top Boruta-selected features and \
+\item{top_selected}{A named vector with names as top Boruta-selected features and
 values as the frequency at which said features were selected}
 
-\item{msnset}{A \code{MSnSet} object that represented the input to an `rf_modeling` \
+\item{msnset}{A \code{MSnSet} object that represented the input to an `rf_modeling`
 call (with Boruta turned on). This is required so P-values can be computed}
 
-\item{response_colname}{The column name (in \code{pData(msnset)}) of the machine \
+\item{response_colname}{The column name (in \code{pData(msnset)}) of the machine
 learning response variable}
 
-\item{feat_name_colname}{If provided, a column in \code{fData(msnset)} by which \
-to name the features by. If \code{NULL}, then \
+\item{feat_name_colname}{If provided, a column in \code{fData(msnset)} by which
+to name the features by. If \code{NULL}, then
 \code{featureNames(msnset) will be used.}}
 
-\item{highlight_feats}{If provided, put an asterisk ❉ next to the label of these \
-features. Note: this uses \code{feat_name_colnames} if passed, and not \
+\item{highlight_feats}{If provided, put a star (★) next to the label of these
+features. Note: this uses \code{feat_name_colnames} if passed, and not
 \code{msnset}'s native features.}
 
-\item{highlight_reason}{Short string describing why certain features would be \
+\item{highlight_reason}{Short string describing why certain features would be
 highlighted. Only applicable if \code{highlight_feats} is not \code{NULL}.}
 
-\item{alpha}{The alpha-level that defines statistical significance (for purposes \
+\item{alpha}{The alpha-level that defines statistical significance (for purposes
 of the color scale)}
+
+\item{title}{The title of the returned plot}
 }
 \description{
 MSnSet Feature Bar Chart with (Adjusted) P-Value Coloring

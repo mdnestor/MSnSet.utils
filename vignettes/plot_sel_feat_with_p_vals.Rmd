@@ -23,7 +23,8 @@ opts_chunk$set(size = "tiny")
 ```{r}
 tryCatch(
     {
-        rf_res <- utils::data("framingham_example_msnset_and_rf")
+        utils::data("framingham_example_msnset_and_rf")
+        rf_res <- framingham_example_msnset_and_rf
         msnset <- rf_res$msnset
         top_selected <- rf_res$out$top
     },

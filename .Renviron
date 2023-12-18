@@ -1,1 +1,2 @@
 _R_CHECK_LIMIT_CORES_=false
+PATH=/opt/homebrew/opt/python@3.12/libexec/bin:/Users/druc594/dist/pysed:/opt/homebrew/Cellar/git/2.41.0_2/bin:/opt/homebrew/opt/ruby/bin:/Applications/regclient/bin:/usr/local/emboss/bin:/Library/Frameworks/R.framework/Versions/4.2-arm64/Resources/bin:/Applications:/Applications:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/TeX/texbin:/opt/X11/bin:/Users/druc594/.cargo/bin

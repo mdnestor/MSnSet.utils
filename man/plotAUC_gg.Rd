@@ -18,12 +18,23 @@ plotAUC_gg(
 
 \item{CI}{(logical) Plot confidence interval or not. Default is FALSE.}
 
-\item{rectilinear}{(logical) Prevents diagonal lines being formed from jumps in TPR from CI boundaries. (Technical -- transforms segment y = mx + b between fpr1 and fpr2 to the line x = avg(fpr1, fpr2) between y = m*fpr1 + b and y = m*fpr2 + b. Surrounding horizontal segments are extended to this new vertical segment.)}
+\item{rectilinear}{(logical) Prevents diagonal lines being formed from jumps 
+in TPR from CI boundaries. (Technical -- transforms segment 
+y = mx + b between fpr1 and fpr2 to the line 
+x = avg(fpr1, fpr2) between y = m*fpr1 + b and 
+y = m*fpr2 + b. Surrounding horizontal segments are 
+extended to this new vertical segment.)}
 
-\item{...}{further arguments passes to the \code{plot} method of the
-\code{\link[pROC]{ci.se}} object of the \code{pROC} package.}
+\item{no_numeric_policy}{One of "plot_blank" or "warning" or "error". Defaults 
+to "warning." What to do if \code{modelingResult} 
+does not contain any numeric values, e.g., if 
+\code{compute_rf} is set to \code{FALSE}. "plot_blank" 
+will plot a blank ROC curve. "warning" will emit a 
+warning but then will perform "plot_blank" behavior. 
+"error" throw an error.}
 
-\item{no_numeric_policy.}{One of "plot_blank" or "warning" or "error". Defaults to "warning." What to do if \code{modelingResult} does not contain any numeric values, e.g., if \code{compute_rf} is set to \code{FALSE}. "plot_blank" will plot a blank ROC curve. "warning" will emit a warning but then will perform "plot_blank" behavior. "error" throw an error.}
+\item{seed}{The random seed to use when bootstrapping for ROC confidence 
+intervals}
 }
 \description{
 Plot AUC after LOOCV Model Evaluation (with ggplot2)

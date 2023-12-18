@@ -5,22 +5,23 @@ adj.P.Val <- NULL # (For lintr)
 #'
 #' @export plot_sel_feat_with_p_vals
 #'
-#' @param top_selected A named vector with names as top Boruta-selected features and \
+#' @param top_selected A named vector with names as top Boruta-selected features and
 #'     values as the frequency at which said features were selected
-#' @param msnset A \code{MSnSet} object that represented the input to an `rf_modeling` \
+#' @param msnset A \code{MSnSet} object that represented the input to an `rf_modeling`
 #'     call (with Boruta turned on). This is required so P-values can be computed
-#' @param response_colname The column name (in \code{pData(msnset)}) of the machine \
+#' @param response_colname The column name (in \code{pData(msnset)}) of the machine
 #'     learning response variable
-#' @param feat_name_colname If provided, a column in \code{fData(msnset)} by which \
-#'     to name the features by. If \code{NULL}, then \
+#' @param feat_name_colname If provided, a column in \code{fData(msnset)} by which
+#'     to name the features by. If \code{NULL}, then
 #'     \code{featureNames(msnset) will be used.}
-#' @param highlight_feats If provided, put an asterisk ❉ next to the label of these \
-#'     features. Note: this uses \code{feat_name_colnames} if passed, and not \
+#' @param highlight_feats If provided, put a star (★) next to the label of these
+#'     features. Note: this uses \code{feat_name_colnames} if passed, and not
 #'     \code{msnset}'s native features.
-#' @param highlight_reason Short string describing why certain features would be \
+#' @param highlight_reason Short string describing why certain features would be
 #'     highlighted. Only applicable if \code{highlight_feats} is not \code{NULL}.
-#' @param alpha The alpha-level that defines statistical significance (for purposes \
+#' @param alpha The alpha-level that defines statistical significance (for purposes
 #'     of the color scale)
+#' @param title The title of the returned plot
 plot_sel_feat_with_p_vals <- function(
     top_selected,
     msnset,
@@ -41,7 +42,7 @@ plot_sel_feat_with_p_vals <- function(
         display_lab <- unlist(unname(
             lapply(
                 display_lab,
-                function(dl) ifelse(dl %in% highlight_feats, paste("❉ ", dl, sep = ""), dl)
+                function(dl) ifelse(dl %in% highlight_feats, paste("\U2605 ", dl, sep = ""), dl)
             )
         ))
     }
@@ -52,7 +53,7 @@ plot_sel_feat_with_p_vals <- function(
         cnt = cnt
     )
 
-    limma <- MSnSet.utils:::.get_limma(top_selected, msnset, alpha, response_colname)
+    limma <- .get_limma(top_selected, msnset, alpha, response_colname)
     df <- merge(df_from_counts, limma, by.x = "lab", by.y = 0)
     labels_breaks <- sort(append(
         c(1, alpha),
@@ -64,7 +65,7 @@ plot_sel_feat_with_p_vals <- function(
     if (!is.null(highlight_reason) && !is.null(highlight_feats)) {
         title_if_else <- labs(
             title = title,
-            subtitle = glue::glue("❉ = {highlight_reason}")
+            subtitle = glue::glue("\U2605 = {highlight_reason}")
         )
     } else {
         title_if_else <- labs(
@@ -105,7 +106,7 @@ plot_sel_feat_with_p_vals <- function(
             limits = c(labels_breaks[length(labels_breaks)], labels_breaks[1]),
             labels = append(
                 labels_breaks[1:(length(labels_breaks) - 1)],
-                c(sprintf("≤ %s", labels_breaks[length(labels_breaks)]))
+                c(sprintf("\U2264 %s", labels_breaks[length(labels_breaks)]))
             ),
             breaks = labels_breaks,
             oob = scales::squish,

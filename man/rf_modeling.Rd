@@ -40,6 +40,11 @@ Another typical value is 10.}
     \item top - just selecting top 3 features
 }}
 
+\item{cores}{The number of processes to use for Boruta. If NULL, the number of 
+processes will be set to max(1, min(cores available in machine - 1, 125)).}
+
+\item{seed}{The random state seed to use during various stages of \code{rf_modeling}}
+
 \item{...}{Extra arguments. Currently passed only to Boruta algorithm.}
 }
 \value{

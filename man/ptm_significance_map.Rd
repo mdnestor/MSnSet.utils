@@ -40,5 +40,5 @@ indicating differential abundance and statistical significance. Data must be
 filtered to peptides modified with a single PTM in advance.
 }
 \examples{
-Need example data
+# Need example data
 }
