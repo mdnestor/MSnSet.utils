@@ -20,9 +20,9 @@ rf_modeling(
 \arguments{
 \item{msnset}{MSnSet object}
 
-\item{features}{character vector features to select from for
-building prediction model. The features can be either in
-featureNames(msnset) or in pData(msnset).}
+\item{features}{character vector features to select from for building
+prediction model. The features can be either in featureNames(msnset) or in
+pData(msnset).}
 
 \item{response}{factor to classify along. Must be only 2 levels.}
 
@@ -40,6 +40,11 @@ Another typical value is 10.}
     \item top - just selecting top 3 features
 }}
 
+\item{cores}{integer; number of cores to use. If \code{NULL}, one less than
+the maximum number of cores will be used.}
+
+\item{seed}{numeric; passed to \code{\link[base]{set.seed}}.}
+
 \item{...}{Extra arguments. Currently passed only to Boruta algorithm.}
 }
 \value{
@@ -56,11 +61,10 @@ list
      }
 }
 \description{
-The objective is - given the number of features,
-select the most informative ones and evaluate
-the predictive random forest model.
-The feature and model selection performed independently
-for each round of LOOCV.
+The objective is - given the number of features, select the most
+  informative ones and evaluate the predictive random forest model. The
+  feature and model selection performed independently for each round of
+  LOOCV.
 }
 \examples{
 # Not run

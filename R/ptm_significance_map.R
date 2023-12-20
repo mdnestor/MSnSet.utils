@@ -1,21 +1,23 @@
 #' @title PTM significance map
 #'
-#' @description Mapping PTMs onto the protein sequence with colors
-#'   indicating differential abundance and statistical significance. Data must be
-#'   filtered to peptides modified with a single PTM in advance.
-#' @param x `data.frame` with required columns "accession", "gene", "site",
-#'   as well as "adj.P.Val" and "logFC". Results from additional statistical
-#'   models may be used by appending adj.P.Val and logFC with "_ModelNameHere".
-#'   For example: adj.P.Val_model1
-#'   When using multiple models, desired models must be passed to `p_val_from`.
-#'   Recommended to provide the `fData` table of an MSnSet object.
+#' @description Mapping PTMs onto the protein sequence with colors indicating
+#'   differential abundance and statistical significance. Data must be filtered
+#'   to peptides modified with a single PTM in advance.
+#'
+#' @param x `data.frame` with required columns "accession", "gene", "site", as
+#'   well as "adj.P.Val" and "logFC". Results from additional statistical models
+#'   may be used by appending adj.P.Val and logFC with "_ModelNameHere". For
+#'   example: adj.P.Val_model1 When using multiple models, desired models must
+#'   be passed to `p_val_from`. Recommended to provide the `fData` table of an
+#'   MSnSet object.
+#' @param fasta_path character; path to FASTA file.
 #' @param accession character; name of the protein (or accession, in general
-#'   terms) for which to plot peptides. Defaults to "all" which will plot
-#'   all proteins with at least one feature with adj.P.Val < `alpha`.
-#' @param p_val_from character vector; names appending adj.P.Val & logFC
-#'   in x to differentiate statistics obtained from different models. When
-#'   p_val_from == NULL (default) it will ba assumed that only one model is
-#'   present and the column names are "adj.P.Val" and "logFC".
+#'   terms) for which to plot peptides. Defaults to "all" which will plot all
+#'   proteins with at least one feature with adj.P.Val < `alpha`.
+#' @param p_val_from character vector; names appending adj.P.Val & logFC in x to
+#'   differentiate statistics obtained from different models. When p_val_from ==
+#'   NULL (default) it will ba assumed that only one model is present and the
+#'   column names are "adj.P.Val" and "logFC".
 #' @param alpha numeric; desired p.Value cutoff
 #'
 #' @return \code{ggplot} object.
@@ -25,17 +27,13 @@
 #' @importFrom tidyselect contains
 #' @importFrom stringr str_detect
 #' @importFrom Biostrings readAAStringSet
-#' @importFrom ggplot2 ggplot geom_rect geom_linerange scale_color_manual ylim theme_minimal theme xlab ggtitle element_text element_blank
+#' @importFrom ggplot2 ggplot geom_rect geom_linerange scale_color_manual ylim
+#'   theme_minimal theme xlab ggtitle element_text element_blank
 #' @importFrom ggrepel geom_label_repel
-#' @importFrom glue glue
-#' @importFrom BiocGenerics width
 #'
 #' @export ptm_significance_map
 #'
 #' @md
-#'
-#' @examples
-#' Need example data
 
 ptm_significance_map <- function(x,
                                  fasta_path,
@@ -85,7 +83,7 @@ ptm_significance_map <- function(x,
       df <- x %>%
         select(c(gene, accession, site), contains(p_val_from))
 
-      colnames(df) <- sub(glue("_{j}"), "", colnames(df))
+      colnames(df) <- sub(paste0("_", j), "", colnames(df))
 
     }
 
@@ -132,7 +130,7 @@ ptm_significance_map <- function(x,
           adj.P.Val > alpha ~ "steady"),
           change = ordered(change, levels=c("up","steady","down")))
 
-      d <- data.frame(x1=1, x2=width(fst[accession_i]), y1=-1, y2=+1)
+      d <- data.frame(x1=1, x2=nchar(fst[accession_i]), y1=-1, y2=+1)
 
       p <- ggplot(data = z) +
         geom_rect(data = d,
@@ -163,16 +161,20 @@ ptm_significance_map <- function(x,
               plot.title = element_text(hjust=0.5, size=20),
               axis.text.x = element_text(angle = 90, hjust = 1, vjust=0.5)) +
         xlab("amino acid position")
+
       if (!is.null(p_val_from)) {
-        p <- p + ggtitle(glue("{gene_i}, {i} ({j})"))
+        p <- p + ggtitle(sprintf("%s, %s (%s)", gene_i, i, j))
       } else {
-        p <- p + ggtitle(glue("{gene_i}, {i}"))
+        p <- p + ggtitle(sprintf("%s, %s", gene_i, i))
       }
+
       print(p)
     }
   }
 }
 
 utils::globalVariables(
-  c("accession", "gene", "site")
+  c("accession", "gene", "site", "adj.P.Val",
+    "positions", "change", "x1", "x2",
+    "y1", "y2", "pos", "label")
 )

@@ -97,7 +97,7 @@
 #'
 #' @import ComplexHeatmap
 #' @importFrom dplyr %>% mutate across where
-#' @importFrom Biobase exprs pData fData
+#' @importFrom Biobase exprs pData fData pData<-
 #' @importFrom stats cor setNames
 #' @importFrom grDevices bmp jpeg png tiff pdf dev.off
 #' @importFrom purrr map2

@@ -13,21 +13,23 @@ ptm_significance_map(
 )
 }
 \arguments{
-\item{x}{\code{data.frame} with required columns "accession", "gene", "site",
-as well as "adj.P.Val" and "logFC". Results from additional statistical
-models may be used by appending adj.P.Val and logFC with "_ModelNameHere".
-For example: adj.P.Val_model1
-When using multiple models, desired models must be passed to \code{p_val_from}.
-Recommended to provide the \code{fData} table of an MSnSet object.}
+\item{x}{\code{data.frame} with required columns "accession", "gene", "site", as
+well as "adj.P.Val" and "logFC". Results from additional statistical models
+may be used by appending adj.P.Val and logFC with "_ModelNameHere". For
+example: adj.P.Val_model1 When using multiple models, desired models must
+be passed to \code{p_val_from}. Recommended to provide the \code{fData} table of an
+MSnSet object.}
+
+\item{fasta_path}{character; path to FASTA file.}
 
 \item{accession}{character; name of the protein (or accession, in general
-terms) for which to plot peptides. Defaults to "all" which will plot
-all proteins with at least one feature with adj.P.Val < \code{alpha}.}
+terms) for which to plot peptides. Defaults to "all" which will plot all
+proteins with at least one feature with adj.P.Val < \code{alpha}.}
 
-\item{p_val_from}{character vector; names appending adj.P.Val & logFC
-in x to differentiate statistics obtained from different models. When
-p_val_from == NULL (default) it will ba assumed that only one model is
-present and the column names are "adj.P.Val" and "logFC".}
+\item{p_val_from}{character vector; names appending adj.P.Val & logFC in x to
+differentiate statistics obtained from different models. When p_val_from ==
+NULL (default) it will ba assumed that only one model is present and the
+column names are "adj.P.Val" and "logFC".}
 
 \item{alpha}{numeric; desired p.Value cutoff}
 }
@@ -35,10 +37,7 @@ present and the column names are "adj.P.Val" and "logFC".}
 \code{ggplot} object.
 }
 \description{
-Mapping PTMs onto the protein sequence with colors
-indicating differential abundance and statistical significance. Data must be
-filtered to peptides modified with a single PTM in advance.
-}
-\examples{
-Need example data
+Mapping PTMs onto the protein sequence with colors indicating
+differential abundance and statistical significance. Data must be filtered
+to peptides modified with a single PTM in advance.
 }
