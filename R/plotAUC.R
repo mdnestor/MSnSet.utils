@@ -61,16 +61,16 @@ plotAUC <- function(modelingResult,
 #' @description Plot AUC (with ggplot2) after LOOCV model evaluation.
 #'
 #' @inheritParams plotAUC
-#' @param rectilinear (logical) Prevents diagonal lines being formed from jumps 
-#'                   in TPR from CI boundaries. See technical, mathematical 
-#'                   details of this operation in Details.
+#' @param rectilinear (logical) whether to prevent diagonal lines being formed from jumps 
+#'                   in TPR from CI boundaries. Default is \code{FALSE}. 
+#'                   See technical, mathematical details of this operation under Details.
 #' @param no_numeric_policy (character) either \code{"warning"},
 #'   \code{"plot_blank"}, or \code{"error"}. Defaults to \code{"warning"}. If
 #'   \code{modelingResult} does not contain any numeric values,
 #'   \code{"plot_blank"} will plot a blank ROC curve, \code{"warning"} will emit
 #'   a warning in addition to plotting a blank ROC curve, and \code{"error"}
 #'   will throw an error.
-#' @param seed (numeric) The random seed to use when bootstrapping for ROC confidence 
+#' @param seed (numeric) the random seed to use when bootstrapping for ROC confidence 
 #'             intervals. Passed to \code{\link[base]{set.seed}}.
 #'
 #' @details If \code{rectilinear = TRUE}, transforms segment \eqn{y = mx + b}

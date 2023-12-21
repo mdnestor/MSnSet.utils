@@ -18,9 +18,9 @@ plotAUC_gg(
 \item{CI}{(logical) whether to plot confidence intervals. Default is
 \code{FALSE}.}
 
-\item{rectilinear}{(logical) Prevents diagonal lines being formed from jumps 
-in TPR from CI boundaries. See technical, mathematical 
-details of this operation in Details.}
+\item{rectilinear}{(logical) whether to prevent diagonal lines being formed from jumps 
+in TPR from CI boundaries. Default is \code{FALSE}. 
+See technical, mathematical details of this operation under Details.}
 
 \item{no_numeric_policy}{(character) either \code{"warning"},
 \code{"plot_blank"}, or \code{"error"}. Defaults to \code{"warning"}. If
@@ -29,7 +29,7 @@ details of this operation in Details.}
 a warning in addition to plotting a blank ROC curve, and \code{"error"}
 will throw an error.}
 
-\item{seed}{(numeric) The random seed to use when bootstrapping for ROC confidence 
+\item{seed}{(numeric) the random seed to use when bootstrapping for ROC confidence 
 intervals. Passed to \code{\link[base]{set.seed}}.}
 }
 \description{
