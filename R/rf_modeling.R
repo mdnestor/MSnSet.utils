@@ -105,7 +105,7 @@ train_model_rf <- function(x, y, ...){
 #'          \item top - just selecting top 3 features
 #'      }
 #' @param cores integer; the number of processes to use for Boruta.
-#'   If \code{NULL}, one less than the maximum number of cores will be used.
+#'   If \code{NULL}, one less than the maximum number of processes will be used.
 #'   If this number is greater than 125, a maximum of 125 cores will be used.
 #' @param seed numeric; the random seed to use during various stages of 
 #'   \code{rf_modeling}. Passed to \code{\link[base]{set.seed}}.
