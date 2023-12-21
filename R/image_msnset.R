@@ -12,6 +12,8 @@
 #' @param valRange number for the pseudocolor range from -valRange to +valRange.
 #'          Default is NULL. In that case the scale goes from 0.025 to 0.975
 #'          quantile.
+#' @param tile_instead_of_raster logical: If TRUE, use \code{geom_tile} instead of 
+#'        \code{geom_raster}
 #' @param maxNRows maximum number of rows to display. Default is 50.
 #' @importFrom reshape2 melt
 #' @importFrom ggplot2 ggplot geom_raster scale_fill_gradientn aes facet_grid

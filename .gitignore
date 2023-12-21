@@ -16,3 +16,6 @@ Misc/
 # editors
 .vscode
 .Rcache/
+
+**/*.html
+vignettes/*.R

@@ -32,6 +32,9 @@ Default is NULL. In that case the scale goes from 0.025 to 0.975
 quantile.}
 
 \item{maxNRows}{maximum number of rows to display. Default is 50.}
+
+\item{tile_instead_of_raster}{logical: If TRUE, use \code{geom_tile} instead of 
+\code{geom_raster}}
 }
 \description{
 Visualize MSnSet

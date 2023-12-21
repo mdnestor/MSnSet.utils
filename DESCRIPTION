@@ -18,6 +18,7 @@ Depends:
     MSnbase
 Imports:
     Biobase,
+    BiocGenerics,
     BiocParallel,
     Biostrings,
     Boruta,
@@ -29,9 +30,11 @@ Imports:
     DOSE,
     dplyr,
     foreach,
+    forcats,
     ggplot2,
     ggrepel, 
     glmnet,
+    glue,
     gplots,
     grid,
     Heatplus,
@@ -81,7 +84,8 @@ Suggests:
     RColorBrewer, 
     ReactomePA,
     rmarkdown,
-    UniProt.ws
+    UniProt.ws,
+    viridis
 Remotes: 
     github::cran/FField,
     github::PNNL-Comp-Mass-Spec/MSnID@pnnl-master

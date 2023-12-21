@@ -34,6 +34,9 @@
 #' @export ptm_significance_map
 #'
 #' @md
+#'
+#' @examples
+#' # Need example data
 
 ptm_significance_map <- function(x,
                                  fasta_path,

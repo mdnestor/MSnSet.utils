@@ -104,11 +104,13 @@ train_model_rf <- function(x, y, ...){
 #'          \item Boruta
 #'          \item top - just selecting top 3 features
 #'      }
-#' @param cores integer; number of cores to use. If \code{NULL}, one less than
-#'   the maximum number of cores will be used.
-#' @param seed numeric; passed to \code{\link[base]{set.seed}}.
+#' @param cores integer; the number of processes to use for Boruta.
+#'   If \code{NULL}, one less than the maximum number of processes will be used.
+#'   If this number is greater than 125, a maximum of 125 cores will be used.
+#' @param seed numeric; the random seed to use during various stages of 
+#'   \code{rf_modeling}. Passed to \code{\link[base]{set.seed}}.
 #' @param ... Extra arguments. Currently passed only to Boruta algorithm.
-#'
+
 #' @return list
 #'      \describe{
 #'          \item{\code{prob}}{is the probabilities (response) from LOOCV
@@ -192,7 +194,7 @@ rf_modeling <- function(msnset,
   set.seed(seed)
   cv_idx <- sample(rep(seq_len(K), num_rep)[seq_len(nrow(dSet))])
   if(is.null(cores)){
-    cores <- max(1, detectCores() - 1)
+    cores <- max(1, min(125, detectCores() - 1))
   }
   stopifnot(1 <= cores)
   if(cores > detectCores()){

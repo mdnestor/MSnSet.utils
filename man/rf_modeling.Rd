@@ -40,10 +40,12 @@ Another typical value is 10.}
     \item top - just selecting top 3 features
 }}
 
-\item{cores}{integer; number of cores to use. If \code{NULL}, one less than
-the maximum number of cores will be used.}
+\item{cores}{integer; the number of processes to use for Boruta.
+If \code{NULL}, one less than the maximum number of processes will be used.
+If this number is greater than 125, a maximum of 125 cores will be used.}
 
-\item{seed}{numeric; passed to \code{\link[base]{set.seed}}.}
+\item{seed}{numeric; the random seed to use during various stages of 
+\code{rf_modeling}. Passed to \code{\link[base]{set.seed}}.}
 
 \item{...}{Extra arguments. Currently passed only to Boruta algorithm.}
 }

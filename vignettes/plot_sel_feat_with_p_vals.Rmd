@@ -1,0 +1,52 @@
+---
+title: "Example of MSnSet Feature Bar Chart with P-Value Coloring"
+output: 
+  BiocStyle::html_document: 
+    toc: true
+    number_sections: true
+---
+
+<!--
+%\VignetteEngine{knitr::rmarkdown}
+%\VignetteIndexEntry{Bar Chart with P-Value Coloring}
+%\VignetteKeyword{MSnSet.utils}
+%\VignettePackage{MSnSet.utils}
+-->
+
+
+```{r setup, echo=FALSE}
+# set global chunk options
+library(knitr)
+opts_chunk$set(size = "tiny")
+```
+
+```{r}
+tryCatch(
+    {
+        utils::data("framingham_example_msnset_and_rf")
+        rf_res <- framingham_example_msnset_and_rf
+        msnset <- rf_res$msnset
+        top_selected <- rf_res$out$top
+    },
+    warning = function(...) "Data not found for plot_sel_feat_with_p_vals.msnset."
+)
+```
+
+```{r}
+tryCatch(
+    {
+        MSnSet.utils::plot_sel_feat_with_p_vals(
+            top_selected = top_selected,
+            msnset = msnset,
+            response_colname = "Case.Status",
+            highlight_feats = names(top_selected)[grepl("^C", names(top_selected))],
+            highlight_reason = glue::glue("Proteins starting with the letter \"C\" as an example
+                                    of highlighting specific features"),
+            title = "Frequency of\nBoruta-Selected Features: Example Plot",
+            alpha = 0.05
+        )
+    },
+    warning = function(...) "Data not found for plot_sel_feat_with_p_vals.msnset.",
+    error = function(...) "Data not found for plot_sel_feat_with_p_vals.msnset."
+)
+```
