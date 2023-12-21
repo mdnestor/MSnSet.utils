@@ -13,29 +13,34 @@ plotAUC_gg(
 )
 }
 \arguments{
-\item{modelingResult}{output from either
-\code{lr_modeling} or \code{rf_modeling}}
+\item{modelingResult}{output of \code{lr_modeling} or \code{rf_modeling}.}
 
-\item{CI}{(logical) Plot confidence interval or not. Default is FALSE.}
+\item{CI}{(logical) whether to plot confidence intervals. Default is
+\code{FALSE}.}
 
 \item{rectilinear}{(logical) Prevents diagonal lines being formed from jumps 
-in TPR from CI boundaries. (Technical -- transforms segment 
-y = mx + b between fpr1 and fpr2 to the line 
-x = avg(fpr1, fpr2) between y = m*fpr1 + b and 
-y = m*fpr2 + b. Surrounding horizontal segments are 
-extended to this new vertical segment.)}
+in TPR from CI boundaries. See technical, mathematical 
+details of this operation in Details.}
 
-\item{no_numeric_policy}{One of "plot_blank" or "warning" or "error". Defaults 
-to "warning." What to do if \code{modelingResult} 
-does not contain any numeric values, e.g., if 
-\code{compute_rf} is set to \code{FALSE}. "plot_blank" 
-will plot a blank ROC curve. "warning" will emit a 
-warning but then will perform "plot_blank" behavior. 
-"error" throw an error.}
+\item{no_numeric_policy}{(character) either \code{"warning"},
+\code{"plot_blank"}, or \code{"error"}. Defaults to \code{"warning"}. If
+\code{modelingResult} does not contain any numeric values,
+\code{"plot_blank"} will plot a blank ROC curve, \code{"warning"} will emit
+a warning in addition to plotting a blank ROC curve, and \code{"error"}
+will throw an error.}
 
-\item{seed}{The random seed to use when bootstrapping for ROC confidence 
-intervals}
+\item{seed}{(numeric) The random seed to use when bootstrapping for ROC confidence 
+intervals. Passed to \code{\link[base]{set.seed}}.}
 }
 \description{
-Plot AUC after LOOCV Model Evaluation (with ggplot2)
+Plot AUC (with ggplot2) after LOOCV model evaluation.
+}
+\details{
+If \code{rectilinear = TRUE}, transforms segment \eqn{y = mx + b}
+  between \eqn{fpr1} and \eqn{fpr2} to the line \eqn{x = avg(fpr1, fpr2)}
+  between \eqn{y = m \times fpr1 + b} and \eqn{y = m \times fpr2 + b}.
+  Surrounding horizontal segments are extended to this new vertical segment.
+}
+\seealso{
+\code{\link{plotAUC}}
 }

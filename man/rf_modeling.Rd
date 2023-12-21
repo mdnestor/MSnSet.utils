@@ -20,9 +20,9 @@ rf_modeling(
 \arguments{
 \item{msnset}{MSnSet object}
 
-\item{features}{character vector features to select from for
-building prediction model. The features can be either in
-featureNames(msnset) or in pData(msnset).}
+\item{features}{character vector features to select from for building
+prediction model. The features can be either in featureNames(msnset) or in
+pData(msnset).}
 
 \item{response}{factor to classify along. Must be only 2 levels.}
 
@@ -61,11 +61,10 @@ list
      }
 }
 \description{
-The objective is - given the number of features,
-select the most informative ones and evaluate
-the predictive random forest model.
-The feature and model selection performed independently
-for each round of LOOCV.
+The objective is - given the number of features, select the most
+  informative ones and evaluate the predictive random forest model. The
+  feature and model selection performed independently for each round of
+  LOOCV.
 }
 \examples{
 # Not run

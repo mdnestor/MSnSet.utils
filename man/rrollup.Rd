@@ -15,7 +15,7 @@ rrollup(
 \arguments{
 \item{msnset}{msnset (or most likely eset subclass) object}
 
-\item{rollBy}{character. A column name in pData(msnset)}
+\item{rollBy}{character. A column name in fData(msnset)}
 
 \item{rollFun}{function for roll-up. "-" for log-transformed data,
 "/" for normal scale}
@@ -33,7 +33,7 @@ MSnSet object
 A primary purpose of this function is to roll-up peptide
 measurements to protein level. Ultimately it can be used
 for rolling-up or combining any features according to a grouping
-factor.
+factor. E.g. from peptides with charges to just the peptide sequences.
 }
 \examples{
 data(srm_msnset)
