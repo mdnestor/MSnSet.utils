@@ -147,7 +147,8 @@ complex_heatmap <- function(
   show_row_names = FALSE,
   heatmap_title = character(0),
   heatmap_legend_title = NULL,
-  color_range = NULL,
+  color_range = c(-1, 0, 1),
+  colors = c("blue", "white", "red"),
   heatmap_args = list(),
   anno_column = NULL,
   anno_row = NULL,
@@ -198,9 +199,9 @@ complex_heatmap <- function(
 
   # Check color_range
   if (!is.null(color_range)) {
-    if(!is.numeric(color_range) | length(color_range) != 2) {
-      stop(paste("color_range must be a numeric vector of length 2",
-                 "specifying lower and upper bounds for heatmap colors"))
+    if(!is.numeric(color_range) | length(color_range) !=  length(colors)) {
+      stop(paste("color_range must be a numeric vector of length equal to length of colors",
+                 "specifying bounds for heatmap colors"))
     }
   }
 
@@ -279,14 +280,9 @@ complex_heatmap <- function(
 
 
   # Colors and color breaks for the heatmap body ------------------
-  breaks_and_colors <- get_color_breaks(range(x, na.rm = TRUE),
-                                        user_breaks = color_range)
-
-  breaks <- breaks_and_colors[["breaks"]]
-  colors <- breaks_and_colors[["colors"]]
 
   # Color function for heatmap body
-  col_fun <- circlize::colorRamp2(breaks = breaks, colors = colors)
+  col_fun <- circlize::colorRamp2(breaks = color_range, colors = colors)
 
   # Create heatmap ------------------------------------------------
   # Arguments that will be passed to ComplexHeatmap::Heatmap
@@ -338,40 +334,6 @@ utils::globalVariables(".")
 
 
 ## Helper functions ------------------------------------------------
-
-
-
-# Get appropriate color breaks for heatmap body ----
-# Set color_range for unique colors within full range of values
-get_color_breaks <- function(x, user_breaks = NULL) {
-
-  # If user_breaks is not provided, set to x
-  if (is.null(user_breaks)) {
-    user_breaks <- x
-  }
-  # Extend or reduce range for unique colors
-  lower <- sort(unique(c(x[1], user_breaks[1])))
-  n_lower <- length(lower) # 1 or 2
-  upper <- sort(unique(c(x[2], user_breaks[2])))
-  n_upper <- length(upper) # 1 or 2
-
-  if (all(sign(x) == +1 | sign(x) == 0)) { # If mix of positive and 0
-    # at most 3 breaks and colors
-    breaks <- c(0, upper)
-    colors <- c("white", rep("red", n_upper))
-  } else if (all(sign(x) == -1 | sign(x) == 0)) { # If mix of negative and 0
-    # at most 3 breaks and colors
-    breaks <- c(lower, 0)
-    colors <- c(rep("blue", n_upper), "white")
-  } else { # If mix of positive and negative
-    # at most 5 breaks and colors
-    breaks <- c(lower, 0, upper)
-    colors <- c(rep("blue", n_lower), "white",
-                rep("red", n_upper))
-  }
-
-  return(list(breaks = breaks, colors = colors))
-}
 
 
 # Get colors for each column or row annotation ----
