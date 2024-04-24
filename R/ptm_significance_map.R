@@ -133,7 +133,7 @@ ptm_significance_map <- function(x,
           adj.P.Val > alpha ~ "steady"),
           change = ordered(change, levels=c("up","steady","down")))
 
-      d <- data.frame(x1=1, x2=nchar(fst[accession_i]), y1=-1, y2=+1)
+      d <- data.frame(x1=1, x2=width(fst[accession_i]), y1=-1, y2=+1)
 
       p <- ggplot(data = z) +
         geom_rect(data = d,
