@@ -6,6 +6,10 @@
 #'
 #' @param path character; File path to the desired FragPipe-generated tmt-report file.
 #'   Any tmt-report file may be used.
+#' @param use_gene_as_prot_id logical; Used only in case of `single-site` files. Switches
+#'   notation from UniProt_Site to a more human-readable and conventional Gene-Site.
+#'   Default it `TRUE`. In case there are duplicates in the new site IDs, returns
+#'   the error message with the prompt to switch to `FALSE`.
 #'
 #' @return (MSnSet) MSnSet object of MSFragger TMT results
 #'
@@ -21,7 +25,7 @@
 #'
 #' @export read_FragPipe_TMT
 
-read_FragPipe_TMT <- function(path = NULL)
+read_FragPipe_TMT <- function(path = NULL, use_gene_as_prot_id = TRUE)
 {
 
   path_to_file <- path
@@ -34,15 +38,33 @@ read_FragPipe_TMT <- function(path = NULL)
 
 
   # make featureNames
-  if (grepl("multi-site|single-site|peptide", basename(path_to_file))) {
+  if (grepl("multi-site|peptide", basename(path_to_file))) {
     df <- df %>%
       mutate(rowname = paste(Gene, ProteinID, Peptide, sep = "|"))
-  } else if (grepl("gene", basename(path_to_file))) {
+  }
+  else if (grepl("single-site", basename(path_to_file))) {
+     if(use_gene_as_prot_id){
+        df <- df %>%
+           mutate(rowname = paste0(Gene,
+                                   "-",
+                                   sub("[^_]*_([A-Z]\\d+)","\\1",Index)))
+        if(anyDuplicated(df$rownames)){
+           stop("Duplicates in the gene-based site names. Switch to use_gene_as_prot_id = FALSE.")
+        }
+     }else{
+        df <- df %>% mutate(rowname = Index)
+     }
+  }
+  else if (grepl("gene", basename(path_to_file))) {
     df <- df %>%
       mutate(rowname = paste(Index, ProteinID, sep = "|"))
-  } else if (grepl("protein", basename(path_to_file))) {
+  }
+  else if (grepl("protein", basename(path_to_file))) {
     df <- df %>%
       mutate(rowname = paste(Gene, Index, sep = "|"))
+  }
+  else{
+     stop("unknown file")
   }
 
   df <- df %>%
@@ -60,7 +82,6 @@ read_FragPipe_TMT <- function(path = NULL)
 
   return(m)
 }
-
 
 
 
