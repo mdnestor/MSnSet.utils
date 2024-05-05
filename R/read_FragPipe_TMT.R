@@ -28,7 +28,7 @@
 #'
 #' @export read_FragPipe_TMT
 
-read_FragPipe_TMT <- function(path = NULL, org_to_retain = TRUE, use_gene_as_prot_id = TRUE)
+read_FragPipe_TMT <- function(path = NULL, org_to_retain = NULL, use_gene_as_prot_id = TRUE)
 {
 
   path_to_file <- path
