@@ -6,6 +6,9 @@
 #'
 #' @param path character; File path to the desired FragPipe-generated tmt-report file.
 #'   Any tmt-report file may be used.
+#' @org_to_retain character; Filtering out contaminants. The argument is the
+#'   official organism name such as "Homo sapiens" or "Bos taurus" or
+#'   "Sus scrofa". Default is NULL, meaning pass all.
 #' @param use_gene_as_prot_id logical; Used only in case of `single-site` files. Switches
 #'   notation from UniProt_Site to a more human-readable and conventional Gene-Site.
 #'   Default it `TRUE`. In case there are duplicates in the new site IDs, returns
@@ -25,7 +28,7 @@
 #'
 #' @export read_FragPipe_TMT
 
-read_FragPipe_TMT <- function(path = NULL, use_gene_as_prot_id = TRUE)
+read_FragPipe_TMT <- function(path = NULL, org_to_retain = TRUE, use_gene_as_prot_id = TRUE)
 {
 
   path_to_file <- path
@@ -36,6 +39,17 @@ read_FragPipe_TMT <- function(path = NULL, use_gene_as_prot_id = TRUE)
 
   df <- fread(file = path_to_file, showProgress = FALSE, data.table = FALSE)
 
+  if(!is.null(org_to_retain)){
+     combined_protein_path <- file.path(dirname(dirname(path_to_file)), "combined_protein.tsv")
+     retained_proteins <- fread(file = combined_protein_path,
+                               showProgress = FALSE, data.table = FALSE) %>%
+       filter(Organism == org_to_retain) %>%
+       distinct(`Protein ID`) %>%
+       rename(ProteinID = `Protein ID`)
+
+     df <- semi_join(df, retained_proteins, by = "ProteinID")
+
+  }
 
   # make featureNames
   if (grepl("multi-site|peptide", basename(path_to_file))) {
