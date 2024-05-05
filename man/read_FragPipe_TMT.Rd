@@ -4,11 +4,20 @@
 \alias{read_FragPipe_TMT}
 \title{Reading MSFragger-generated tmt-report files from a file path as MSnSet object}
 \usage{
-read_FragPipe_TMT(path = NULL)
+read_FragPipe_TMT(
+  path = NULL,
+  org_to_retain = NULL,
+  use_gene_as_prot_id = TRUE
+)
 }
 \arguments{
 \item{path}{character; File path to the desired FragPipe-generated tmt-report file.
 Any tmt-report file may be used.}
+
+\item{use_gene_as_prot_id}{logical; Used only in case of `single-site` files. Switches
+notation from UniProt_Site to a more human-readable and conventional Gene-Site.
+Default it `TRUE`. In case there are duplicates in the new site IDs, returns
+the error message with the prompt to switch to `FALSE`.}
 }
 \value{
 (MSnSet) MSnSet object of MSFragger TMT results
