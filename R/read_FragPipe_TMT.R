@@ -48,7 +48,7 @@ read_FragPipe_TMT <- function(path = NULL, use_gene_as_prot_id = TRUE)
            mutate(rowname = paste0(Gene,
                                    "-",
                                    sub("[^_]*_([A-Z]\\d+)","\\1",Index)))
-        if(anyDuplicated(df$rownames)){
+        if(anyDuplicated(df$rowname)){
            stop("Duplicates in the gene-based site names. Switch to use_gene_as_prot_id = FALSE.")
         }
      }else{
