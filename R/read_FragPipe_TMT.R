@@ -59,12 +59,21 @@ read_FragPipe_TMT <- function(path = NULL, org_to_retain = NULL, use_gene_as_pro
   else if (grepl("single-site", basename(path_to_file))) {
      if(use_gene_as_prot_id){
         df <- df %>%
+           filter(Gene != "") %>%
            mutate(rowname = paste0(Gene,
                                    "-",
                                    sub("[^_]*_([A-Z]\\d+)","\\1",Index)))
         if(anyDuplicated(df$rowname)){
-           stop("Duplicates in the gene-based site names. Switch to use_gene_as_prot_id = FALSE.")
-        }
+           # let's try to resolve by ReferenceIntensity
+           if(!("ReferenceIntensity" %in% colnames(df))){
+              stop("Duplicates in the gene-based site names. Can't resolve ambiguity.
+                   Switch to use_gene_as_prot_id = FALSE.")
+           } else {
+              df <- df %>%
+                 group_by(rowname) %>%
+                 slice_max(ReferenceIntensity)
+          }
+       }
      }else{
         df <- df %>% mutate(rowname = Index)
      }
