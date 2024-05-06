@@ -31,84 +31,84 @@
 read_FragPipe_TMT <- function(path = NULL, org_to_retain = NULL, use_gene_as_prot_id = TRUE)
 {
 
-  path_to_file <- path
+   path_to_file <- path
 
-  if (!file.exists(path_to_file)) {
-    stop(sprintf("file not found in folder: %s", dirname(path_to_file)))
-  }
+   if (!file.exists(path_to_file)) {
+      stop(sprintf("file not found in folder: %s", dirname(path_to_file)))
+   }
 
-  df <- fread(file = path_to_file, showProgress = FALSE, data.table = FALSE)
+   df <- fread(file = path_to_file, showProgress = FALSE, data.table = FALSE)
 
-  if(!is.null(org_to_retain)){
-     combined_protein_path <- file.path(dirname(dirname(path_to_file)), "combined_protein.tsv")
-     retained_proteins <- fread(file = combined_protein_path,
-                               showProgress = FALSE, data.table = FALSE) %>%
-       filter(Organism == org_to_retain) %>%
-       distinct(`Protein ID`) %>%
-       rename(ProteinID = `Protein ID`)
+   if(!is.null(org_to_retain)){
+      combined_protein_path <- file.path(dirname(dirname(path_to_file)), "combined_protein.tsv")
+      retained_proteins <- fread(file = combined_protein_path,
+                                 showProgress = FALSE, data.table = FALSE) %>%
+         filter(Organism == org_to_retain) %>%
+         distinct(`Protein ID`) %>%
+         rename(ProteinID = `Protein ID`)
 
-     df <- semi_join(df, retained_proteins, by = "ProteinID")
+      df <- semi_join(df, retained_proteins, by = "ProteinID")
 
-  }
+   }
 
-  # make featureNames
-  if (grepl("multi-site|peptide", basename(path_to_file))) {
-    df <- df %>%
-      mutate(rowname = paste(Gene, ProteinID, Peptide, sep = "|"))
-  }
-  else if (grepl("single-site", basename(path_to_file))) {
-     if(use_gene_as_prot_id){
-        df <- df %>%
-           filter(Gene != "") %>%
-           mutate(rowname = paste0(Gene,
-                                   "-",
-                                   sub("[^_]*_([A-Z]\\d+)","\\1",Index)))
-        if(anyDuplicated(df$rowname)){
-           # let's try to resolve by ReferenceIntensity
-           if(!("ReferenceIntensity" %in% colnames(df))){
-              stop("Duplicates in the gene-based site names. Can't resolve ambiguity.
+   # make featureNames
+   if (grepl("multi-site|peptide", basename(path_to_file))) {
+      df <- df %>%
+         mutate(rowname = paste(Gene, ProteinID, Peptide, sep = "|"))
+   }
+   else if (grepl("single-site", basename(path_to_file))) {
+      if(use_gene_as_prot_id){
+         df <- df %>%
+            filter(Gene != "") %>%
+            mutate(rowname = paste0(Gene,
+                                    "-",
+                                    sub("[^_]*_([A-Z]\\d+)","\\1",Index)))
+         if(anyDuplicated(df$rowname)){
+            # let's try to resolve by ReferenceIntensity
+            if(!("ReferenceIntensity" %in% colnames(df))){
+               stop("Duplicates in the gene-based site names. Can't resolve ambiguity.
                    Switch to use_gene_as_prot_id = FALSE.")
-           } else {
-              df <- df %>%
-                 group_by(rowname) %>%
-                 slice_max(ReferenceIntensity)
-          }
-       }
-     }else{
-        df <- df %>% mutate(rowname = Index)
-     }
-  }
-  else if (grepl("gene", basename(path_to_file))) {
-    df <- df %>%
-      mutate(rowname = paste(Index, ProteinID, sep = "|"))
-  }
-  else if (grepl("protein", basename(path_to_file))) {
-    df <- df %>%
-      mutate(rowname = paste(Gene, Index, sep = "|"))
-  }
-  else{
-     stop("unknown file")
-  }
+            } else {
+               df <- df %>%
+                  group_by(rowname) %>%
+                  slice_max(ReferenceIntensity)
+            }
+         }
+      }else{
+         df <- df %>% mutate(rowname = Index)
+      }
+   }
+   else if (grepl("gene", basename(path_to_file))) {
+      df <- df %>%
+         mutate(rowname = paste(Index, ProteinID, sep = "|"))
+   }
+   else if (grepl("protein", basename(path_to_file))) {
+      df <- df %>%
+         mutate(rowname = paste(Gene, Index, sep = "|"))
+   }
+   else{
+      stop("unknown file")
+   }
 
-  df <- df %>%
-    mutate(featureName = rowname, .before = colnames(.)[[1]]) %>%
-    column_to_rownames(var = "rowname")
+   df <- df %>%
+      mutate(featureName = rowname, .before = colnames(.)[[1]]) %>%
+      column_to_rownames(var = "rowname")
 
-  x_data <- df %>%
-    select(-c(colnames(.)[[1]]:ReferenceIntensity)) %>%
-    as.matrix()
+   x_data <- df %>%
+      select(-c(colnames(.)[[1]]:ReferenceIntensity)) %>%
+      as.matrix()
 
-  f_data <- df %>%
-    select(c(colnames(.)[[1]]:ReferenceIntensity))
+   f_data <- df %>%
+      select(c(colnames(.)[[1]]:ReferenceIntensity))
 
-  m <- MSnSet(exprs = x_data, fData = f_data)
+   m <- MSnSet(exprs = x_data, fData = f_data)
 
-  return(m)
+   return(m)
 }
 
 
 
 utils::globalVariables(
-  c(".", "featureName")
+   c(".", "featureName")
 )
 
