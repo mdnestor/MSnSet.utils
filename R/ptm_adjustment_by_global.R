@@ -21,6 +21,13 @@
 
 adjust_for_parent_protein_profiles <- function(m_ptm, m_global){
 
+   # sample alignment
+   common_samples <- intersect(sampleNames(m_ptm), sampleNames(m_global))
+   stopifnot(length(common_saples) < 2)
+   m_ptm <- m_ptm[,common_samples]
+   m_global <- m_global[,common_samples]
+
+   # gene matching
    stopifnot("Gene" %in% fvarLabels(m_ptm))
 
    gene_overlap <- intersect(fData(m_ptm)$Gene, featureNames(m_global))
