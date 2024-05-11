@@ -23,7 +23,7 @@ adjust_for_parent_protein_profiles <- function(m_ptm, m_global){
 
    # sample alignment
    common_samples <- intersect(sampleNames(m_ptm), sampleNames(m_global))
-   stopifnot(length(common_samples) < 2)
+   stopifnot(length(common_samples) > 2)
    m_ptm <- m_ptm[,common_samples]
    m_global <- m_global[,common_samples]
 
