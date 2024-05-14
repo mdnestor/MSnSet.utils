@@ -171,7 +171,7 @@ ptm_significance_map <- function(x,
         p <- p + ggtitle(sprintf("%s, %s", gene_i, i))
       }
 
-      print(p)
+      return(p)
     }
   }
 }
