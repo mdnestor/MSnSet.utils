@@ -140,6 +140,7 @@ NULL
 
 
 
+
 #' @export blue.colors
 #' @describeIn colorschemes based on RColorBrewer "Blues"
 blue.colors <- function(n)
