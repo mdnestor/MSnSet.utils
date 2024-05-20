@@ -6,7 +6,7 @@
 #'
 #' @param path character; File path to the desired FragPipe-generated tmt-report file.
 #'   Any tmt-report file may be used.
-#' @org_to_retain character; Filtering out contaminants. The argument is the
+#' @param org_to_retain character; Filtering out contaminants. The argument is the
 #'   official organism name such as "Homo sapiens" or "Bos taurus" or
 #'   "Sus scrofa". Default is NULL, meaning pass all.
 #' @param use_gene_as_prot_id logical; Used only in case of `single-site` files. Switches
@@ -22,9 +22,11 @@
 #' @importFrom dplyr %>% select mutate
 #'
 #' @examples
+#' \dontrun{
 #' file_path <- "C:/Users/fakeusr222/Desktop/MSF_TMT_job/ratio_multi-site_MD.tsv"
 #'   msnset <- read_FragPipe_TMT(file_path)
 #'   show(msnset)
+#' }
 #'
 #' @export read_FragPipe_TMT
 

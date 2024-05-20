@@ -156,7 +156,7 @@ ee <- ee[rowMeans(!is.na(exprs(ee))) >= 0.5, ]
 complex_heatmap(ee)
 
 # Limit color range to see differences more easily
-complex_heatmap(ee, color_range = c(-2, 2))
+complex_heatmap(ee, color_range = c(-2, 0, 2))
 
 # Sample correlation heatmap
 complex_heatmap(ee, heatmap_type = "s")

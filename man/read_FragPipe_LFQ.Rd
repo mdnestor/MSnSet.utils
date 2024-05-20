@@ -18,8 +18,10 @@ Function has only been tested with label-free intensity-based
   an optional output file which needs to be specified in FP settings.
 }
 \examples{
+\dontrun{
 file_path <- "C:/Users/fakeusr222/Desktop/MSF_LFQ_job/MSstats.csv"
-  msnset <- read_FragPipe_LFQ(file_path)
-  show(msnset)
+msnset <- read_FragPipe_LFQ(file_path)
+show(msnset)
+}
 
 }

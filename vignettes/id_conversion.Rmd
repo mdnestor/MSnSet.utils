@@ -81,7 +81,7 @@ bitr(genes, fromType="SYMBOL", toType="UNIPROT", OrgDb="org.Hs.eg.db")
 This one may or may not to work.  There some persistent troubles due to [BioMart 
 site migration](http://www.biomart.org/news.html).  
 When it works, it is really great, though.
-```{r biomartm, message=FALSE}
+```{r biomartm, message=FALSE, eval = FALSE}
 library(biomaRt)
 # listMarts()
 ensembl <- useMart("ensembl")
