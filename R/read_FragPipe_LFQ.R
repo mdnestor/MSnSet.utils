@@ -15,9 +15,11 @@
 #' @importFrom dplyr %>% select filter distinct relocate everything mutate
 #'
 #' @examples
+#' \dontrun{
 #' file_path <- "C:/Users/fakeusr222/Desktop/MSF_LFQ_job/MSstats.csv"
-#'   msnset <- read_FragPipe_LFQ(file_path)
-#'   show(msnset)
+#' msnset <- read_FragPipe_LFQ(file_path)
+#' show(msnset)
+#' }
 #'
 #' @export read_FragPipe_LFQ
 

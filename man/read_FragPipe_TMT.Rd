@@ -14,6 +14,10 @@ read_FragPipe_TMT(
 \item{path}{character; File path to the desired FragPipe-generated tmt-report file.
 Any tmt-report file may be used.}
 
+\item{org_to_retain}{character; Filtering out contaminants. The argument is the
+official organism name such as "Homo sapiens" or "Bos taurus" or
+"Sus scrofa". Default is NULL, meaning pass all.}
+
 \item{use_gene_as_prot_id}{logical; Used only in case of `single-site` files. Switches
 notation from UniProt_Site to a more human-readable and conventional Gene-Site.
 Default it `TRUE`. In case there are duplicates in the new site IDs, returns
@@ -28,8 +32,10 @@ Function has only been tested with TMT intensity-based
   must be properly selected in the FP settings.
 }
 \examples{
+\dontrun{
 file_path <- "C:/Users/fakeusr222/Desktop/MSF_TMT_job/ratio_multi-site_MD.tsv"
   msnset <- read_FragPipe_TMT(file_path)
   show(msnset)
+}
 
 }
