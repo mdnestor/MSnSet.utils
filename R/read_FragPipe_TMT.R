@@ -62,6 +62,10 @@ read_FragPipe_TMT <- function(path = NULL, org_to_retain = NULL, use_gene_as_pro
                                           Peptide,
                                           sep = "|"))
 
+      df <- df %>%
+         dplyr::filter(
+            str_split_i(Index, "_", i = 4) == str_split_i(Index, "_", i = 5))
+
    }
    else if (grepl("single-site", basename(path_to_file))) {
       if(use_gene_as_prot_id){
