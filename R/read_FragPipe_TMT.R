@@ -55,8 +55,13 @@ read_FragPipe_TMT <- function(path = NULL, org_to_retain = NULL, use_gene_as_pro
 
    # make featureNames
    if (grepl("multi-site|peptide", basename(path_to_file))) {
-      df <- df %>%
-         mutate(rowname = paste(Gene, ProteinID, Peptide, sep = "|"))
+
+      df <- df %>% mutate(rowname = paste(Gene,
+                                          ProteinID,
+                                          str_split_i(Index, "_", i = 4),
+                                          Peptide,
+                                          sep = "|"))
+
    }
    else if (grepl("single-site", basename(path_to_file))) {
       if(use_gene_as_prot_id){
