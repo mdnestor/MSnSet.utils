@@ -1,7 +1,7 @@
 Package: MSnSet.utils
 Type: Package
 Title: Miscellaneous Functions for Proteomics Data Analysis
-Version: 0.1.0
+Version: 0.2.0
 Date: 2023-03-14
 Encoding: UTF-8
 Author: Vladislav Petyuk
