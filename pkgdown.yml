@@ -1,0 +1,15 @@
+pandoc: 3.1.11
+pkgdown: 2.1.1
+pkgdown_sha: ~
+articles:
+  complex_heatmap: complex_heatmap.html
+  fuzzy_cmeans: fuzzy_cmeans.html
+  heatmap_examples: heatmap_examples.html
+  heatmap.plus.2: heatmap.plus.2.html
+  id_conversion: id_conversion.html
+  ontology_overrepresentation: ontology_overrepresentation.html
+  PeCorA: PeCorA.html
+  peptide_mapping_example_1: peptide_mapping_example_1.html
+  plot_sel_feat_with_p_vals: plot_sel_feat_with_p_vals.html
+  wgcna_example: wgcna_example.html
+last_built: 2025-01-15T21:53Z
