@@ -9,7 +9,8 @@ plotAUC_gg(
   CI = FALSE,
   rectilinear = FALSE,
   no_numeric_policy = c("warning", "plot_blank", "error"),
-  seed = 0
+  seed = 0,
+  model_name = "Model"
 )
 }
 \arguments{

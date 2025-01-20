@@ -18,35 +18,36 @@
 
 plotAUC <- function(modelingResult,
                     CI = FALSE,
-                    ...)
-{
+                    ...) {
   if (!CI) {
     perf <- performance(modelingResult$pred, "tpr", "fpr")
     # x=1-spec, y=sens
     plot(perf,
-         main = sprintf("AUC: %s", round(modelingResult$auc, 2)),
-         col = 2, lwd = 2)
+      main = sprintf("AUC: %s", round(modelingResult$auc, 2)),
+      col = 2, lwd = 2
+    )
     abline(a = 0, b = 1, lwd = 2, lty = 2, col = "gray")
   } else {
     old_par <- par()
     par(pty = "s")
     pROC_obj <- roc(modelingResult$pred@labels[[1]],
-                    modelingResult$pred@predictions[[1]],
-                    direction = "<",
-                    smoothed = T,
-                    # arguments for ci
-                    ci = TRUE,
-                    ci.alpha = 0.95,
-                    stratified = FALSE,
-                    # arguments for plot
-                    plot = TRUE,
-                    auc.polygon = FALSE,
-                    max.auc.polygon = FALSE,
-                    grid = FALSE,
-                    print.auc = TRUE,
-                    print.auc.y = 0.1,
-                    print.auc.x = 0.8,
-                    show.thres = TRUE)
+      modelingResult$pred@predictions[[1]],
+      direction = "<",
+      smoothed = T,
+      # arguments for ci
+      ci = TRUE,
+      ci.alpha = 0.95,
+      stratified = FALSE,
+      # arguments for plot
+      plot = TRUE,
+      auc.polygon = FALSE,
+      max.auc.polygon = FALSE,
+      grid = FALSE,
+      print.auc = TRUE,
+      print.auc.y = 0.1,
+      print.auc.x = 0.8,
+      show.thres = TRUE
+    )
 
     sens.ci <- ci.se(pROC_obj)
     plot(sens.ci, type = "shape", col = "#FF8888", conf = 95, ...)
@@ -97,50 +98,64 @@ plotAUC_gg <- function(modelingResult,
                        CI = FALSE,
                        rectilinear = FALSE,
                        no_numeric_policy = c("warning", "plot_blank", "error"),
-                       seed = 0)
-{
+                       seed = 0,
+                       model_name = "Model") {
   no_numeric_policy <- match.arg(no_numeric_policy,
-                                 choices = c("warning", "plot_blank", "error"))
+    choices = c("warning", "plot_blank", "error")
+  )
 
   fpr <- lo <- hi <- NULL
   random_line_col <- "#888888"
 
   if (is.na(modelingResult$auc)) {
     switch(no_numeric_policy,
-           warning = {
-             warning("modelingResult$auc is NA. Plotting blank ROC Curve.")
-             # plot_blank
-           },
-           plot_blank = {
-             # plot_blank
-           },
-           error = {
-             stop("modelingResult$auc is NA and `modelingResult` = \"error\".")
-           })
+      warning = {
+        warning("modelingResult$auc is NA. Plotting blank ROC Curve.")
+        # plot_blank
+      },
+      plot_blank = {
+        # plot_blank
+      },
+      error = {
+        stop("modelingResult$auc is NA and `modelingResult` = \"error\".")
+      }
+    )
 
     # plot_blank
     p <- ggplot() +
-      geom_abline(mapping = aes(color = "", slope = 1, intercept = 0),
-                  linetype = "dashed", show.legend = FALSE) +
+      geom_abline(
+        mapping = aes(color = "", slope = 1, intercept = 0),
+        linetype = "dashed", show.legend = FALSE
+      ) +
       labs(subtitle = "AUC: NA")
   } else {
-    p <- plot_main(modelingResult = modelingResult,
-                   seed = seed,
-                   conf_int = CI,
-                   rectilinear = rectilinear)
+    p <- plot_main(
+      modelingResult = modelingResult,
+      seed = seed,
+      conf_int = CI,
+      rectilinear = rectilinear,
+      model_name = model_name
+    )
   }
 
   # Modifications common to all plots
   p <- p +
-    scale_x_continuous(name = "False Positive Rate",
-                       limits = c(0, 1), breaks = seq(0, 1, 0.2)) +
-    scale_y_continuous(name = "True Positive Rate",
-                       limits = c(0, 1), breaks = seq(0, 1, 0.2)) +
+    scale_x_continuous(
+      name = "False Positive Rate",
+      limits = c(0, 1), breaks = seq(0, 1, 0.2)
+    ) +
+    scale_y_continuous(
+      name = "True Positive Rate",
+      limits = c(0, 1), breaks = seq(0, 1, 0.2)
+    ) +
     scale_color_manual(values = random_line_col) +
-    ggtitle("ROC Curve") +
-    theme(aspect.ratio = 1,
-          plot.title = element_text(hjust = 0.5, face = "bold", size = 16),
-          plot.subtitle = element_text(hjust = 0.5))
+    # ggtitle("ROC Curve") +
+    theme(
+      aspect.ratio = 1,
+      text = element_text(family = "Fira Code"),
+      plot.title = element_text(hjust = 0.5, face = "bold", size = 16),
+      plot.subtitle = element_text(hjust = 0.5)
+    )
 
   return(p)
 }
@@ -150,33 +165,36 @@ plotAUC_gg <- function(modelingResult,
 plot_main <- function(modelingResult,
                       seed = 0,
                       conf_int = FALSE,
-                      rectilinear = FALSE) {
+                      rectilinear = FALSE,
+                      model_name = "Model") {
   perf <- performance(modelingResult$pred, "tpr", "fpr")
 
   set.seed(seed)
 
   pROC_obj <- suppressMessages({
     roc(modelingResult$pred@labels[[1]],
-        modelingResult$pred@predictions[[1]],
-        direction = "<",
-        smoothed = TRUE,
-        # arguments for ci
-        ci = conf_int,
-        ci.alpha = 0.95,
-        stratified = FALSE,
-        # arguments for plot
-        plot = FALSE,
-        auc.polygon = FALSE,
-        max.auc.polygon = FALSE,
-        grid = FALSE)
+      modelingResult$pred@predictions[[1]],
+      direction = "<",
+      smoothed = TRUE,
+      # arguments for ci
+      ci = conf_int,
+      ci.alpha = 0.95,
+      stratified = FALSE,
+      # arguments for plot
+      plot = FALSE,
+      auc.polygon = FALSE,
+      max.auc.polygon = FALSE,
+      grid = FALSE
+    )
   })
 
   df <- data.frame(x = perf@x.values[[1]], y = perf@y.values[[1]])
 
   if (conf_int) {
     the_ci <- ci.se(pROC_obj,
-                    specificities = seq(0, 1, 0.025),
-                    progress = "none") %>%
+      specificities = seq(0, 1, 0.0005),
+      progress = "text"
+    ) %>%
       as.data.frame() %>%
       `colnames<-`(c("lo", "mid", "hi")) %>%
       rownames_to_column("fpr") %>%
@@ -189,30 +207,41 @@ plot_main <- function(modelingResult,
     }
   }
 
-  auc.ci.lo <- pROC_obj$ci[1]
   auc.ci.hi <- pROC_obj$ci[3]
 
   ribbon_col <- "#c96f6f"
   ci_col <- "red"
-  p <- ggplot(data = df) +
-    geom_abline(mapping = aes(color = "", slope = 1, intercept = 0),
-                linetype = "dashed", show.legend = FALSE)
+  p <- ggplot(data = df)
 
   if (conf_int) {
     p <- p +
-      geom_ribbon(data = the_ci,
-                  mapping = aes(x = fpr, ymin = lo, ymax = hi, fill = ""),
-                  color = ci_col, alpha = 0.5) +
-      scale_fill_manual(name = "95% CI", values = ribbon_col) +
-      labs(subtitle = sprintf("AUC: %.3f\nAUC CI: [%.3f, %.3f]",
-                              modelingResult$auc, auc.ci.lo, auc.ci.hi))
+      geom_ribbon(
+        data = the_ci,
+        mapping = aes(x = fpr, ymin = lo, ymax = hi, fill = ""),
+        color = ci_col, alpha = 0.5
+      ) +
+      scale_fill_manual(name = "95% C.I.", values = ribbon_col) +
+      labs(subtitle = sprintf(
+        "AUC: %.3f ± %.3f (95%% C.I.)",
+        modelingResult$auc, auc.ci.hi - modelingResult$auc
+      ))
   } else {
     p <- p +
       labs(subtitle = sprintf("AUC: %.3f", modelingResult$auc))
   }
 
   p <- p +
-    geom_line(mapping = aes(x = x, y = y), lwd = 1)
+    ggplot2::scale_linetype_manual(values = unlist(setNames(c("dashed", "solid"), c("Random Model", model_name))), name = "") +
+    geom_line(mapping = aes(x = x, y = y, linetype = model_name), lwd = 1.2) +
+    geom_abline(
+      mapping = aes(
+        slope = 1,
+        intercept = 0,
+        linetype = "Random Model"
+      ),
+      color = "grey70",
+      show.legend = NA
+    )
 
   return(p)
 }
