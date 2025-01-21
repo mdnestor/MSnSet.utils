@@ -52,7 +52,10 @@ rrollup <- function(msnset, rollBy, rollFun,
                            exprs(msnset),
                            check.names = FALSE)
         # temp[is.na(temp)] <- 0
-        temp <- aggregate(. ~ rollBy, temp, as_function(algorithm), na.action = na.pass)
+        rol_fun <- function(x) {
+            x <- x[!is.na(x)]
+            as_function(algorithm)(x)}
+        temp <- aggregate(. ~ rollBy, temp, rol_fun, na.action = na.pass)
         # temp[temp == 0] <- NA
         exprs.new <- as.matrix(temp[,-1])
         rownames(exprs.new) <- temp[,1]
